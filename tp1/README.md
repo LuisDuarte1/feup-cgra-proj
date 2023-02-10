@@ -1,4 +1,4 @@
-# CGRA 2021/2022
+# CG 2022/2023
 
 ## Group T0xG0y
 
@@ -9,4 +9,4 @@
 - In exercise 1 we observed X
 - In exercise 2 we had difficulties in Y
 
-![Screenshot 1](screenshots/cgra-t0xgxx-tp1-n.png)
+![Screenshot 1](screenshots/cg-t0xgxx-tp1-n.png)
