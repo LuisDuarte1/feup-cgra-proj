@@ -1,4 +1,4 @@
-# CGRA 2021/2022
+# CG 2022/2023
 
 ## Group T0xG0y
 | Name             | Number    | E-Mail             |
