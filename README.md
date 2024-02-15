@@ -1,10 +1,10 @@
 # CG 2023/2024
 
-## Group T0xG0y
+## Group T09G03
 | Name             | Number    | E-Mail             |
 | ---------------- | --------- | ------------------ |
-| John Doe         | 201901010 | ...                |
-| Jane Doe         | 201901011 | ...                |
+| Luís Duarte         | 202108734 | up202108734@fe.up.pt                |
+| Madalena Ye         | 202108795 | up202108795@fe.up.pt                |
 
 ----
 
