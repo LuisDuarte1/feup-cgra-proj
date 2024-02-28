@@ -5,7 +5,7 @@ import { MyTriangle } from "./MyTriangle.js";
 import { MyTriangleBig } from "./MyTriangleBig.js";
 import { MyTriangleSmall } from "./MyTriangleSmall.js";
 import { MyTangram } from "./MyTangram.js";
-import { MyCube } from "./MyCube.js";
+import { MyUnitCube } from "./MyUnitCube.js";
 
 
 
@@ -39,7 +39,7 @@ export class MyScene extends CGFscene {
     this.triangleSmall = new MyTriangleSmall(this);
     this.triangleBig = new MyTriangleBig(this);
     this.tangram = new MyTangram(this);
-    this.cube = new MyCube(this);
+    this.cube = new MyUnitCube(this);
 
 
     //Objects connected to MyInterface
@@ -50,8 +50,8 @@ export class MyScene extends CGFscene {
     this.parallelogramVisibility = false;
     this.triangleSmallVisibility = false;
     this.triangleBigVisibility = false;
-    this.tangramVisibility = false;
-    this.cubeVisibility = true;
+    this.tangramVisibility = true;
+    this.cubeVisibility = false;
 
 
   }
@@ -120,9 +120,21 @@ export class MyScene extends CGFscene {
     if(this.parallelogramVisibility) this.parallelogram.display();
     if(this.triangleSmallVisibility) this.triangleSmall.display();
     if(this.triangleBigVisibility) this.triangleBig.display();
-    if(this.tangramVisibility) this.tangram.display();
-    if(this.cubeVisibility) this.cube.display();
-
+    if(this.cubeVisibility) {
+      this.pushMatrix();
+      this.scale(6,6,6);
+      this.translate(0.5,-0.5,0.5);
+      this.cube.display();
+      this.popMatrix();
+    }
+    if(this.tangramVisibility) {
+      this.pushMatrix();
+      this.setDiffuse(0.839,0.49,0.502);
+      this.translate(2.25,0.1,3.5);
+      this.rotate(3*Math.PI/2,1,0,0);
+      this.tangram.display();
+      this.popMatrix();
+    }
 
 
 

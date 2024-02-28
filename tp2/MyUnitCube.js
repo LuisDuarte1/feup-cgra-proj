@@ -5,7 +5,7 @@ import { CGFobject } from '../lib/CGF.js';
  * @param gl {WebGLRenderingContext}
  * @constructor
  */
-export class MyCube extends CGFobject {
+export class MyUnitCube extends CGFobject {
 	constructor(scene) {
 		super(scene);
 
