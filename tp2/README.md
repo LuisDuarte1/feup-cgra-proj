@@ -4,7 +4,7 @@
 
 ## TP 2 Notes
 
-From these exercises, we learned how to manipulate geometric transformations in a 3D scene using WebGL. 
+From these exercises, we learned how to manipulate geometric transformations in a 3D scene using WebGL.
 - In the first exercise, we utilized matrices to position Tangram pieces in the XY plane, created a MyTangram class to encapsulate these objects, and implemented display functions. 
 ![Screenshot 1](screenshots/cg-t09g03-tp2-1.png)
 - In the second exercise, we introduced a unit cube (MyUnitCube) centered at the origin, applying transformations to position it as a base for the Tangram figure. 
