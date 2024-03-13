@@ -9,3 +9,7 @@ In Exercise 1, we used the unit cube implemented in previous classes to create a
 
 Then we proceeded to appply several materials with a high specular component to the figures present in the tangram.
 ![Screenshot 2](screenshots/cg-t09g03-tp3-2.png)
+
+
+In exercice 2, in order to draw the prism we draw the vertices by dividing a trignometric circle by the number of sides. However, in order to have multiple normals in the "same" vertex we need to duplicate the vertices.
+![Screenshot 3](screenshots/cg-t09g03-tp3-3.png)
