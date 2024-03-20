@@ -1,6 +1,7 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFtexture } from "../lib/CGF.js";
 import { MyQuad } from "./MyQuad.js";
 import { MyTangram } from "./MyTangram.js";
+import { MyUnitCubeQuad } from "./MyUnitCubeQuad.js";
 
 /**
  * MyScene
@@ -60,7 +61,13 @@ export class MyScene extends CGFscene {
 
         this.quadVisibility = false;
         this.tangram = new MyTangram(this);
-        this.tangramVisibility = true;
+        this.tangramVisibility = false;
+        this.unitCube = new MyUnitCubeQuad(this, [
+            new CGFtexture(this, "images/mineTop.png"),
+            new CGFtexture(this, "images/mineBottom.png"),
+            new CGFtexture(this, "images/mineSide.png"),
+        ], this.quadMaterial)
+        this.unitCubeVisibility = true;
 
         this.textureIds = { 'Board': 0, 'Floor': 1, 'Window': 2 };
         this.wrappingS = { 'Repeat': 0, 'Clamp to edge': 1, 'Mirrored repeat': 2 };
@@ -138,6 +145,11 @@ export class MyScene extends CGFscene {
             this.quadMaterial.setTexture(this.tangramTexture)
             this.quadMaterial.apply()
             this.tangram.display();
+        }
+
+        if(this.unitCubeVisibility){
+            this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.NEAREST);
+            this.unitCube.display();            
         }
 
 
