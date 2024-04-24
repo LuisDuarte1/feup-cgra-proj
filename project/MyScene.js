@@ -37,6 +37,11 @@ export class MyScene extends CGFscene {
 
     this.enableTextures(true);
 
+//------ Applied Material
+this.quadMaterial = new CGFappearance(this);
+this.quadMaterial.loadTexture('images/earth.jpg');
+this.quadMaterial.setTextureWrap('REPEAT', 'REPEAT');
+
 this.texture = new CGFtexture(this, "images/terrain.jpg");
 this.appearance = new CGFappearance(this);
 this.appearance.setTexture(this.texture);
@@ -79,8 +84,10 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     if (this.displayAxis) this.axis.display();
 
     // ---- BEGIN Primitive drawing section
-    if(this.sphereVisbility) this.sphere.display()
-
+    if(this.sphereVisbility) {
+      this.quadMaterial.apply()
+      this.sphere.display()
+    }
     this.pushMatrix();
     this.appearance.apply();
     this.translate(0,-100,0);

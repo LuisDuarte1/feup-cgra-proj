@@ -17,9 +17,14 @@ export class MySphere extends CGFobject{
         this.vertices = []
 
         this.indices = []
-        const stackStep = 2 * Math.PI / stacks;
-        const sectorStep = Math.PI / slices;
-        for(let i = 0; i <= stacks; i++){
+
+        this.normals = []
+
+        this.texCoords = []
+
+        const stackStep = Math.PI / 2 / stacks;
+        const sectorStep = Math.PI * 2 / slices;
+        for(let i = 0; i <= stacks*2; i++){
             let stackAngle = Math.PI / 2 - i * stackStep;
             const xy = Math.cos(stackAngle)
             const z = Math.sin(stackAngle)
@@ -28,12 +33,16 @@ export class MySphere extends CGFobject{
                 let sectorAngle = j * sectorStep
                 const x = xy * Math.cos(sectorAngle)
                 const y = xy * Math.sin(sectorAngle)
-                this.vertices.push(x,y,z)
-                //TODO(luisd): make UV and normals
+
+                this.vertices.push(x,z,y)
+                
+                this.normals.push(x,z,y)
+
+                this.texCoords.push(1 - j / (slices), i / (stacks*2))
             }
         }
 
-        for(let i = 0; i < stacks; i++){
+        for(let i = 0; i < stacks*2; i++){
             let k1 = i * (slices + 1);
             let k2 = k1 + slices + 1;
             for(let j = 0; j < slices; j++, k1++, k2++){
@@ -41,7 +50,7 @@ export class MySphere extends CGFobject{
                     this.indices.push(k1, k2, k1 + 1)
                     this.indices.push(k1 + 1, k2, k1)
                 }
-                if(i != (stacks - 1)){
+                if(i != (stacks*2 - 1)){
                     this.indices.push(k1+1, k2, k2+1)
                     this.indices.push(k2+1, k2, k1+1)
                 }
