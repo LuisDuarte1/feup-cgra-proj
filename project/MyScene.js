@@ -1,4 +1,5 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFshader, CGFtexture } from "../lib/CGF.js";
+import { MyPanorama } from "./MyPanorama.js";
 import { MyPlane } from "./MyPlane.js";
 import { MySphere } from "./MySphere.js";
 
@@ -29,7 +30,10 @@ export class MyScene extends CGFscene {
     this.plane = new MyPlane(this,30);
 
     this.sphere = new MySphere(this, 20, 20);
-    this.sphereVisbility = true;
+    this.sphereVisbility = false;
+
+    this.panoramaTexture = new CGFtexture(this, 'images/panorama.jpg')
+    this.panorama = new MyPanorama(this, this.panoramaTexture)
 
     //Objects connected to MyInterface
     this.displayAxis = true;
@@ -80,6 +84,8 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     // Apply transformations corresponding to the camera position relative to the origin
     this.applyViewMatrix();
 
+    this.panorama.display();
+    this.setDefaultAppearance()
     // Draw axis
     if (this.displayAxis) this.axis.display();
 
