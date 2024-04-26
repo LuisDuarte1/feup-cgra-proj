@@ -16,7 +16,7 @@ export class MyPanorama extends CGFobject{
         this.appearance.setSpecular(0,0,0,0);
         this.appearance.setEmission(1,1,1,1)
         this.appearance.setTexture(texture)
-        this.sphere = new MySphere(scene, 20, 20, true)
+        this.sphere = new MySphere(scene, 30, 30, true)
 	}
 
     /**
@@ -29,6 +29,9 @@ export class MyPanorama extends CGFobject{
         this.appearance.apply()
 
         this.scene.pushMatrix()
+
+        const cameraPos = this.scene.camera.position
+        this.scene.translate(cameraPos[0], cameraPos[1], cameraPos[2])
 
         this.scene.scale(200, 200, 200)
 
