@@ -1,10 +1,17 @@
-import {CGFobject} from '../lib/CGF.js';
+import {CGFobject, CGFscene} from '../lib/CGF.js';
 
 
 export class MySphere extends CGFobject{
-    constructor(scene, slices, stacks) {
+    /**
+     * 
+     * @param {CGFscene} scene 
+     * @param {number} slices 
+     * @param {number} stacks 
+     * @param {boolean} invertNormals 
+     */
+    constructor(scene, slices, stacks, invertNormals=false) {
 		super(scene);
-		this.initBuffers(slices, stacks);
+		this.initBuffers(slices, stacks, invertNormals);
 	}
 
     normalize(v1){
@@ -12,7 +19,13 @@ export class MySphere extends CGFobject{
         return [v1[0]/magnitude, v1[1]/magnitude, v1[2]/magnitude]
     }
 
-	initBuffers(slices, stacks) {
+    /**
+     * 
+     * @param {number} slices 
+     * @param {number} stacks 
+     * @param {boolean} invertNormals 
+     */
+	initBuffers(slices, stacks, invertNormals) {
 
         this.vertices = []
 
@@ -35,8 +48,9 @@ export class MySphere extends CGFobject{
                 const y = xy * Math.sin(sectorAngle)
 
                 this.vertices.push(x,z,y)
+                if(invertNormals) this.normals.push(-x,-y,-x)
+                else this.normals.push(x,z,y)
                 
-                this.normals.push(x,z,y)
 
                 this.texCoords.push(1 - j / (slices), i / (stacks*2))
             }
