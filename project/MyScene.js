@@ -60,6 +60,7 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
 
   }
   initLights() {
+    this.setGlobalAmbientLight(0.6,0.6,0.6,1)
     this.lights[0].setPosition(15, 0, 5, 1);
     this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
     this.lights[0].enable();
@@ -95,7 +96,6 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     this.setDefaultAppearance()
     // Draw axis
     if (this.displayAxis) this.axis.display();
-
     // ---- BEGIN Primitive drawing section
     if(this.rockVisibility) this.rock.display()
     if(this.rockSetVisibility) this.rockSet.display()
