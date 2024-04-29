@@ -25,14 +25,20 @@ export class MyRock extends CGFobject{
     constructor(scene, randomMagnitude=8){
         super(scene)
         this.appearance = new CGFappearance(scene)
-        this.appearance.setShininess(1)
-        setColorRGB(this.appearance, 99, 95, 84)
+        setColorRGB(this.appearance, 190, 190, 190)
+        this.appearance.setShininess(5)
         this.appearance.loadTexture("images/rock.jpg")
         
         const ratio = Math.random()/2 + 0.5
+
+        const vertical = Math.random() >= 0.5
         
         this.initialSphere = new MySphere(scene, 15, 15, false, 
-            ratio, 0.4)
+            ratio, vertical ? 0.8 : 0.5)
+        
+        this.verticalRadius = ratio
+        this.horizontalRadius = vertical ? 0.8 : 0.5
+
         this.randomizeVertices(randomMagnitude)
     }
     /**
