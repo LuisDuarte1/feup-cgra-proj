@@ -26,7 +26,7 @@ export class MyRock extends CGFobject{
         super(scene)
         this.appearance = new CGFappearance(scene)
         this.appearance.setShininess(1)
-        setColorRGB(this.appearance, 179, 135, 102)
+        setColorRGB(this.appearance, 99, 95, 84)
         this.appearance.loadTexture("images/rock.jpg")
         
         const ratio = Math.random()/2 + 0.5
