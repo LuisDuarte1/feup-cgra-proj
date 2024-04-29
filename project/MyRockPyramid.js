@@ -13,22 +13,22 @@ export class MyRockPyramid extends CGFobject{
             this.rocks.push(rock)
             this.rockTransformations.push({
                 position: [x,
-                    i == 0 ? 0 : curr_height+rock.verticalRadius,
+                    i == 0 ? 0 : curr_height,
                     z],
                 rotation_y: (Math.random()*2 - 1)*Math.PI/2
             })
             
-            curr_height += rock.verticalRadius/2
+            curr_height += rock.verticalRadius
         }
     }
 
     buildRocks(){
-        this.buildColumn(0,0,3)
+        this.buildColumn(0,0,4)
 
-        this.buildColumn(0,1,2)
-        this.buildColumn(0,-1,2)
-        this.buildColumn(1,0,2)
-        this.buildColumn(-1,0,2)
+        this.buildColumn(0,1,3)
+        this.buildColumn(0,-1,3)
+        this.buildColumn(1,0,3)
+        this.buildColumn(-1,0,3)
 
         this.buildColumn(-1,-1, 1)
         this.buildColumn(-1, 1, 1)
