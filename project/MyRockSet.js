@@ -48,7 +48,7 @@ export class MyRockSet extends CGFobject{
         //we assume that every rock occupies 1 squared unit (even though it's not always true)
         this.positions = []
         for(let i = 0; i < num_rocks; i++){
-            this.rocks.push(new MyRock(scene, 7))
+            this.rocks.push(new MyRock(scene, 14))
 
             //find position for each rock
             let tries = 0;

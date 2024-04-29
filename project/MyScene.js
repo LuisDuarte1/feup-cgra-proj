@@ -39,6 +39,8 @@ export class MyScene extends CGFscene {
 
     this.rock = new MyRock(this)
     this.rockSet = new MyRockSet(this, 10, 10)
+    this.rockVisibility = true
+    this.rockSetVisibility = false
 
     //Objects connected to MyInterface
     this.displayAxis = true;
@@ -95,8 +97,8 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     if (this.displayAxis) this.axis.display();
 
     // ---- BEGIN Primitive drawing section
-    // this.rock.display()
-    this.rockSet.display()
+    if(this.rockVisibility) this.rock.display()
+    if(this.rockSetVisibility) this.rockSet.display()
     this.pushMatrix();
     this.appearance.apply();
     this.translate(0,-100,0);

@@ -15,14 +15,14 @@ export class MyRock extends CGFobject{
         for(let i = 0; i < vertices.length / 3; i++){
             const vertex = [vertices[i*3], vertices[i*3 + 1], vertices[i*3+ 2]]
             const normal = [normals[i*3], normals[i*3 + 1], normals[i*3+ 2]]
-            const deviation = Math.random() / magnitude
+            const deviation = (Math.random()*2-1) / magnitude
             const resultVertex = applyScalarToPointInDirection(normal, vertex, deviation)
             changeVertex(vertices, resultVertex, i)
         }
         this.initialSphere.initGLBuffers()
     }
     
-    constructor(scene, randomMagnitude=6){
+    constructor(scene, randomMagnitude=8){
         super(scene)
         this.appearance = new CGFappearance(scene)
         this.appearance.setShininess(1)
