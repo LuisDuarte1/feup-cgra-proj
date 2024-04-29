@@ -2,6 +2,8 @@ import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFshader, CGFtexture } fr
 import { MyPanorama } from "./MyPanorama.js";
 import { MyPlane } from "./MyPlane.js";
 import { MySphere } from "./MySphere.js";
+import { MyRock } from "./MyRock.js";
+import { MyRockSet } from "./MyRockSet.js";
 
 /**
  * MyScene
@@ -35,6 +37,11 @@ export class MyScene extends CGFscene {
     this.panoramaTexture = new CGFtexture(this, 'images/panorama.jpg')
     this.panorama = new MyPanorama(this, this.panoramaTexture)
 
+    this.rock = new MyRock(this)
+    this.rockSet = new MyRockSet(this, 10, 10)
+    this.rockVisibility = true
+    this.rockSetVisibility = false
+
     //Objects connected to MyInterface
     this.displayAxis = true;
     this.scaleFactor = 1;
@@ -63,7 +70,7 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
       1.0,
       0.1,
       1000,
-      vec3.fromValues(50, 10, 15),
+      vec3.fromValues(50, 25, 15),
       vec3.fromValues(0, 0, 0)
     );
   }
@@ -90,10 +97,8 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     if (this.displayAxis) this.axis.display();
 
     // ---- BEGIN Primitive drawing section
-    if(this.sphereVisbility) {
-      this.quadMaterial.apply()
-      this.sphere.display()
-    }
+    if(this.rockVisibility) this.rock.display()
+    if(this.rockSetVisibility) this.rockSet.display()
     this.pushMatrix();
     this.appearance.apply();
     this.translate(0,-100,0);

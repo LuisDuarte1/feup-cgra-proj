@@ -9,9 +9,9 @@ export class MySphere extends CGFobject{
      * @param {number} stacks 
      * @param {boolean} invertNormals 
      */
-    constructor(scene, slices, stacks, invertNormals=false) {
+    constructor(scene, slices, stacks, invertNormals=false, verticalRadius=1, horizontalRadius=1) {
 		super(scene);
-		this.initBuffers(slices, stacks, invertNormals);
+		this.initBuffers(slices, stacks, invertNormals,verticalRadius,horizontalRadius);
 	}
 
     normalize(v1){
@@ -24,8 +24,11 @@ export class MySphere extends CGFobject{
      * @param {number} slices 
      * @param {number} stacks 
      * @param {boolean} invertNormals 
+     * @param {number} verticalRadius 
+     * @param {number} horizontalRadius 
+     * 
      */
-	initBuffers(slices, stacks, invertNormals) {
+	initBuffers(slices, stacks, invertNormals, verticalRadius, horizontalRadius) {
 
         this.vertices = []
 
@@ -40,12 +43,12 @@ export class MySphere extends CGFobject{
         for(let i = 0; i <= stacks*2; i++){
             let stackAngle = Math.PI / 2 - i * stackStep;
             const xy = Math.cos(stackAngle)
-            const z = Math.sin(stackAngle)
+            const z = horizontalRadius * Math.sin(stackAngle)
 
             for(let j = 0; j <= slices; j++){
                 let sectorAngle = j * sectorStep
-                const x = xy * Math.cos(sectorAngle)
-                const y = xy * Math.sin(sectorAngle)
+                const x = horizontalRadius * xy * Math.cos(sectorAngle)
+                const y = verticalRadius * xy * Math.sin(sectorAngle)
 
                 this.vertices.push(x,z,y)
                 if(invertNormals) this.normals.push(-x,-y,-x)
