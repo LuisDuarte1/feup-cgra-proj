@@ -16,6 +16,9 @@ export class MyRock extends CGFobject{
             const vertex = [vertices[i*3], vertices[i*3 + 1], vertices[i*3+ 2]]
             const normal = [normals[i*3], normals[i*3 + 1], normals[i*3+ 2]]
             const deviation = (Math.random()*2-1) / magnitude
+            if (vertex[1] == this.horizontalRadius || vertex[1] == -this.horizontalRadius){
+                continue
+            }
             const resultVertex = applyScalarToPointInDirection(normal, vertex, deviation)
             changeVertex(vertices, resultVertex, i)
         }
