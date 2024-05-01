@@ -1,10 +1,7 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFshader, CGFtexture } from "../lib/CGF.js";
 import { MyPlane } from "./MyPlane.js";
-<<<<<<< HEAD
 import { MyPetal } from "./MyPetal.js";
 import { MyStem } from "./MyStem.js";
-=======
->>>>>>> master
 
 /**
  * MyScene
@@ -28,22 +25,16 @@ export class MyScene extends CGFscene {
     this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
 
-<<<<<<< HEAD
     
-=======
->>>>>>> master
     //Initialize scene objects
     this.axis = new CGFaxis(this);
     this.plane = new MyPlane(this,30);
 
-<<<<<<< HEAD
     this.petal = new MyPetal(this, Math.PI/4.0);
     this.petalVisibility = false;
-    this.stem = new MyStem(this);
-    this.stemVisibility = false;
+    this.stem = new MyStem(this, 30);
+    this.stemVisibility = true;
 
-=======
->>>>>>> master
     //Objects connected to MyInterface
     this.displayAxis = true;
     this.scaleFactor = 1;
@@ -102,10 +93,7 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     this.popMatrix();
 
     // ---- END Primitive drawing section
-<<<<<<< HEAD
     if(this.petalVisibility) this.petal.display();
     if(this.stemVisibility) this.stem.display();
-=======
->>>>>>> master
   }
 }
