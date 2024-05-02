@@ -26,6 +26,7 @@ export class MyInterface extends CGFinterface {
         this.gui.add(this.scene, 'rockVisibility').name('Rock')
         this.gui.add(this.scene, 'rockSetVisibility').name('RockSet')
         this.gui.add(this.scene, 'rockPyramidVisibility').name('Rock Pyramid')
+        this.gui.add(this.scene, 'beeVisibility').name('Bee')
 
         this
         return true;

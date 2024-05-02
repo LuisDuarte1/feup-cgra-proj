@@ -5,6 +5,7 @@ import { MySphere } from "./MySphere.js";
 import { MyRock } from "./MyRock.js";
 import { MyRockSet } from "./MyRockSet.js";
 import { MyRockPyramid } from "./MyRockPyramid.js";
+import { MyBee } from "./MyBee.js";
 
 /**
  * MyScene
@@ -41,9 +42,13 @@ export class MyScene extends CGFscene {
     this.rock = new MyRock(this)
     this.rockPyramid = new MyRockPyramid(this, 10, 10)
     this.rockSet = new MyRockSet(this, 10, 10)
+    this.bee = new MyBee(this)
+
     this.rockVisibility = false
-    this.rockPyramidVisibility = true
+    this.rockPyramidVisibility = false
     this.rockSetVisibility = false
+    this.beeVisibility = true
+
 
     //Objects connected to MyInterface
     this.displayAxis = true;
@@ -103,6 +108,7 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     if(this.rockVisibility) this.rock.display()
     if(this.rockSetVisibility) this.rockSet.display()
     if(this.rockPyramidVisibility) this.rockPyramid.display()
+    if(this.beeVisibility) this.bee.display()
     this.pushMatrix();
     this.appearance.apply();
     this.translate(0,-100,0);

@@ -8,10 +8,13 @@ export class MySphere extends CGFobject{
      * @param {number} slices 
      * @param {number} stacks 
      * @param {boolean} invertNormals 
+     * @param {number} verticalRadius 
+     * @param {number} horizontalRadius 
+     * @param {boolean} half
      */
-    constructor(scene, slices, stacks, invertNormals=false, verticalRadius=1, horizontalRadius=1) {
+    constructor(scene, slices, stacks, invertNormals=false, verticalRadius=1, horizontalRadius=1, half=false) {
 		super(scene);
-		this.initBuffers(slices, stacks, invertNormals,verticalRadius,horizontalRadius);
+		this.initBuffers(slices, stacks, invertNormals,verticalRadius,horizontalRadius, half);
 	}
 
     normalize(v1){
@@ -26,9 +29,10 @@ export class MySphere extends CGFobject{
      * @param {boolean} invertNormals 
      * @param {number} verticalRadius 
      * @param {number} horizontalRadius 
+     * @param {boolean} half
      * 
      */
-	initBuffers(slices, stacks, invertNormals, verticalRadius, horizontalRadius) {
+	initBuffers(slices, stacks, invertNormals, verticalRadius, horizontalRadius, half) {
 
         this.vertices = []
 
@@ -39,7 +43,7 @@ export class MySphere extends CGFobject{
         this.texCoords = []
 
         const stackStep = Math.PI / 2 / stacks;
-        const sectorStep = Math.PI * 2 / slices;
+        const sectorStep = !half ? Math.PI * 2 / slices : Math.PI / slices;
         for(let i = 0; i <= stacks*2; i++){
             let stackAngle = Math.PI / 2 - i * stackStep;
             const xy = Math.cos(stackAngle)

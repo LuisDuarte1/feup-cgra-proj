@@ -1,10 +1,17 @@
-import {CGFobject} from '../lib/CGF.js';
+import {CGFobject, CGFscene} from '../lib/CGF.js';
 
 
 export class MyCylinder extends CGFobject {
-	constructor(scene, slices, stacks) {
+    /**
+     * 
+     * @param {CGFscene} scene 
+     * @param {number} slices 
+     * @param {number} stacks 
+     * @param {boolean} removeBottoms
+     */
+	constructor(scene, slices, stacks, removeBottoms=false) {
 		super(scene);
-		this.initBuffers(slices, stacks);
+		this.initBuffers(slices, stacks, removeBottoms);
 	}
 
     replaceVertex(src, index, dest){
@@ -18,50 +25,61 @@ export class MyCylinder extends CGFobject {
         return [v1[0]/magnitude, v1[1]/magnitude, v1[2]/magnitude]
     }
 	
-	initBuffers(slices, stacks) {
+    /**
+     * 
+     * @param {number} slices 
+     * @param {number} stacks 
+     * @param {boolean} removeBottoms 
+     */
+	initBuffers(slices, stacks, removeBottoms) {
         const factor = 2*Math.PI/slices
 
         let face_vertices = [0,0,0]
-
+        
         for(let i = 0; i < 2*Math.PI;  i += factor){
             face_vertices.push(Math.cos(i), Math.sin(i), 0)
         }
         face_vertices = face_vertices.slice(0, (slices+1)*3)
         
-
+        
         let face_indices = []
-
+        
         for(let i = 0; i < slices-1; i++){
             face_indices.push(0, i+1, i+2)
         }
         face_indices.push(0,slices, 1)
-        console.log(face_indices)
-
-		this.vertices = [
-            ...face_vertices,
-            ...face_vertices.map((value, index, _) => {
-                if ((index+1) % 3 == 0)
-                    return 1
-                return value
-            })
-		];
-
-
-		//Counter-clockwise reference of vertices
-		this.indices = [
-            ...[...face_indices].reverse(),
-            ...face_indices.map((value) => value + slices + 1)
-		];
 
         this.normals = [
         ]
-        
-        for(let i= 0; i < slices+1; i++){
-            this.normals.push(0,0,-1)
+        this.vertices = []
+        this.indices = []
+        if(!removeBottoms){
+            
+            this.vertices = [
+                ...face_vertices,
+                ...face_vertices.map((value, index, _) => {
+                    if ((index+1) % 3 == 0)
+                        return 1
+                    return value
+                })
+            ];
+
+
+            //Counter-clockwise reference of vertices
+            this.indices = [
+                ...[...face_indices].reverse(),
+                ...face_indices.map((value) => value + slices + 1)
+            ];
+
+
+            for(let i= 0; i < slices+1; i++){
+                this.normals.push(0,0,-1)
+            }
+            for(let i= 0; i < slices+1; i++){
+                this.normals.push(0,0,1)
+            }
         }
-        for(let i= 0; i < slices+1; i++){
-            this.normals.push(0,0,1)
-        }
+
 
         for(let i = 0; i < stacks; i++){
             const right_face = face_vertices.slice(3).map((value, index, _) => {
@@ -84,7 +102,7 @@ export class MyCylinder extends CGFobject {
             this.normals.push(...Array(right_face.length*2).fill(0))
 
             for (let j = 0; j < slices; j++){
-                const faceVerticesCount = (slices+1)*2
+                const faceVerticesCount = removeBottoms ? 0 : (slices+1)*2
                 const normal = this.normalize([Math.cos(factor*j), Math.sin(factor*j), 0])
                 this.indices.push(faceVerticesCount+slices*(i*2) + j)
                 this.indices.push(faceVerticesCount+slices*(i*2) + ((1 + j) % slices))
