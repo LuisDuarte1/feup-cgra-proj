@@ -1,7 +1,12 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFshader, CGFtexture } from "../lib/CGF.js";
+import { MyPanorama } from "./MyPanorama.js";
 import { MyPlane } from "./MyPlane.js";
 import { MyPetal } from "./MyPetal.js";
 import { MyStem } from "./MyStem.js";
+import { MySphere } from "./MySphere.js";
+import { MyRock } from "./MyRock.js";
+import { MyRockSet } from "./MyRockSet.js";
+import { MyRockPyramid } from "./MyRockPyramid.js";
 
 /**
  * MyScene
@@ -34,12 +39,29 @@ export class MyScene extends CGFscene {
     this.petalVisibility = false;
     this.stem = new MyStem(this, 30);
     this.stemVisibility = true;
+    this.sphere = new MySphere(this, 20, 20);
+    this.sphereVisbility = false;
+
+    this.panoramaTexture = new CGFtexture(this, 'images/panorama.jpg')
+    this.panorama = new MyPanorama(this, this.panoramaTexture)
+
+    this.rock = new MyRock(this)
+    this.rockPyramid = new MyRockPyramid(this, 10, 10)
+    this.rockSet = new MyRockSet(this, 10, 10)
+    this.rockVisibility = false
+    this.rockPyramidVisibility = false
+    this.rockSetVisibility = false
 
     //Objects connected to MyInterface
     this.displayAxis = true;
     this.scaleFactor = 1;
 
     this.enableTextures(true);
+
+//------ Applied Material
+this.quadMaterial = new CGFappearance(this);
+this.quadMaterial.loadTexture('images/earth.jpg');
+this.quadMaterial.setTextureWrap('REPEAT', 'REPEAT');
 
 this.texture = new CGFtexture(this, "images/terrain.jpg");
 this.appearance = new CGFappearance(this);
@@ -48,6 +70,7 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
 
   }
   initLights() {
+    this.setGlobalAmbientLight(0.6,0.6,0.6,1)
     this.lights[0].setPosition(15, 0, 5, 1);
     this.lights[0].setDiffuse(1.0, 1.0, 1.0, 1.0);
     this.lights[0].enable();
@@ -58,7 +81,7 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
       1.0,
       0.1,
       1000,
-      vec3.fromValues(15, 15, 15),
+      vec3.fromValues(50, 5, 15),
       vec3.fromValues(0, 0, 0)
     );
   }
@@ -79,11 +102,14 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     // Apply transformations corresponding to the camera position relative to the origin
     this.applyViewMatrix();
 
+    this.panorama.display();
+    this.setDefaultAppearance()
     // Draw axis
     if (this.displayAxis) this.axis.display();
-
     // ---- BEGIN Primitive drawing section
-
+    if(this.rockVisibility) this.rock.display()
+    if(this.rockSetVisibility) this.rockSet.display()
+    if(this.rockPyramidVisibility) this.rockPyramid.display()
     this.pushMatrix();
     this.appearance.apply();
     this.translate(0,-100,0);
