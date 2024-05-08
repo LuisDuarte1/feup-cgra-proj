@@ -23,8 +23,7 @@ export class MyInterface extends CGFinterface {
         //Slider element in GUI
         this.gui.add(this.scene, 'scaleFactor', 0.1, 5).name('Scale Factor');
 
-        this.gui.add(this.scene, 'petalVisibility').name("Petal");
-        this.gui.add(this.scene, 'stemVisibility').name("Stem");
+        this.gui.add(this.scene, 'flowerVisibility').name('Flower')
 
         this.gui.add(this.scene, 'rockVisibility').name('Rock')
         this.gui.add(this.scene, 'rockSetVisibility').name('RockSet')

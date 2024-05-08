@@ -7,6 +7,9 @@ import { MySphere } from "./MySphere.js";
 import { MyRock } from "./MyRock.js";
 import { MyRockSet } from "./MyRockSet.js";
 import { MyRockPyramid } from "./MyRockPyramid.js";
+import { MyReceptacle } from "./MyReceptacle.js";
+import { MyFlower } from "./MyFlower.js";
+import { MyCorolla } from "./MyCorolla.js";
 
 /**
  * MyScene
@@ -35,12 +38,19 @@ export class MyScene extends CGFscene {
     this.axis = new CGFaxis(this);
     this.plane = new MyPlane(this,30);
 
-    this.petal = new MyPetal(this, Math.PI/4.0);
+    this.petal = new MyPetal(this, Math.PI/4, 1);
     this.petalVisibility = false;
     this.stem = new MyStem(this, 30);
-    this.stemVisibility = true;
+    this.stemVisibility = false;
+    this.corolla = new MyCorolla(this);
+    this.corollaVisibility = true;
+    this.receptacle = new MyReceptacle(this, 20, 20);
+    this.receptacleVisibility = false;
     this.sphere = new MySphere(this, 20, 20);
     this.sphereVisbility = false;
+
+    this.flower = new MyFlower(this)
+    this.flowerVisibility = false;
 
     this.panoramaTexture = new CGFtexture(this, 'images/panorama.jpg')
     this.panorama = new MyPanorama(this, this.panoramaTexture)
@@ -81,7 +91,7 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
       1.0,
       0.1,
       1000,
-      vec3.fromValues(50, 5, 15),
+      vec3.fromValues(5, 5, 5),
       vec3.fromValues(0, 0, 0)
     );
   }
@@ -91,6 +101,7 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     this.setSpecular(0.2, 0.4, 0.8, 1.0);
     this.setShininess(10.0);
   }
+  
   display() {
     // ---- BEGIN Background, camera and axis setup
     // Clear image and depth buffer everytime we update the scene
@@ -110,6 +121,11 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     if(this.rockVisibility) this.rock.display()
     if(this.rockSetVisibility) this.rockSet.display()
     if(this.rockPyramidVisibility) this.rockPyramid.display()
+    if(this.receptacleVisibility) this.receptacle.display();
+    if(this.flowerVisibility) this.flower.display();
+    if(this.petalVisibility) this.petal.display();
+    if(this.corollaVisibility) this.corolla.display();
+    
     this.pushMatrix();
     this.appearance.apply();
     this.translate(0,-100,0);
@@ -117,9 +133,6 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     this.rotate(-Math.PI/2.0,1,0,0);
     this.plane.display();
     this.popMatrix();
-
     // ---- END Primitive drawing section
-    if(this.petalVisibility) this.petal.display();
-    if(this.stemVisibility) this.stem.display();
   }
 }

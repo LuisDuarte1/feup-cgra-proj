@@ -4,7 +4,8 @@ import { MyCylinder } from './primitives/MyCylinder.js';
 export class MyStem extends CGFobject {
     constructor(scene, numCylinders) {
         super(scene);
-        this.numCylinders = numCylinders;
+        //this.numCylinders = numCylinders;
+        this.numCylinders = 10;
         this.cylinders = [];
         for (let i = 0; i < this.numCylinders; i++) {
             let height = Math.random() * (5 - 1) + 1; 
@@ -23,7 +24,7 @@ export class MyStem extends CGFobject {
             this.scene.translate(0, height, 0); 
             this.scene.rotate(-Math.PI / 2, 1, 0, 0); 
             this.scene.scale(1, 1, this.cylinders[i].height);
-            this.scene.scale(0.3, 0.3, 1);
+            this.scene.scale(0.05, 0.05, 1);
             this.cylinders[i].display();
             this.scene.popMatrix(); 
         }
