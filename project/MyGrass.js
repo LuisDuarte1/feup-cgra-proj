@@ -1,4 +1,4 @@
-import { CGFobject, CGFscene } from "../lib/CGF.js";
+import { CGFobject, CGFscene, CGFshader } from "../lib/CGF.js";
 
 
 const BLADE_HEIGHT = 1.3;
@@ -20,23 +20,104 @@ export class MyGrass extends CGFobject{
      */
     constructor(scene, bladeCount=12000, radius=25, yPos=0){
         super(scene)
+        this.scene = scene
         this.bladeCount = bladeCount
         this.radius = radius
         this.yPos = yPos
+        this.time = 0;
+        this.shader = new CGFshader(this.scene.gl, "shaders/grass/grass_vert.glsl", "shaders/grass/grass_frag.glsl")
         this.generateField()
+    }
+
+    initColorBuffer(){
+        var gl = this.scene.gl;
+        this.colorBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer)
+        gl.bufferData(
+            gl.ARRAY_BUFFER,
+            new Float32Array(this.colors),
+            gl.STATIC_DRAW
+        )
+        // unbind buffers
+        gl.bindBuffer(gl.ARRAY_BUFFER, null);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+    }
+
+    drawElements(primitiveType){
+        this.scene.setActiveShader(this.shader)
+        this.shader.setUniformsValues({"uTime": this.time})
+        var shader = this.scene.activeShader;
+        var gl = this.scene.gl;
+        // update matrices on shader
+        gl.uniformMatrix4fv(
+          shader.uniforms.uMVMatrix,
+          false,
+          this.scene.activeMatrix
+        );
+
+        gl.uniformMatrix4fv(
+            shader.uniforms.uPMatrix,
+            false,
+            this.scene.getProjectionMatrix()
+          );
+
+        gl.enableVertexAttribArray(shader.attributes.aVertexPosition);
+        // bind the vertices buffer the active array buffer
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.vertsBuffer);
+        // assign the active buffer to the shader's vertex position attribute
+        gl.vertexAttribPointer(
+            shader.attributes.aVertexPosition,
+            3,
+            gl.FLOAT,
+            false,
+            0,
+            0
+        )
+
+        gl.enableVertexAttribArray(shader.attributes.aColor);
+        // bind the vertices buffer the active array buffer
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
+        // assign the active buffer to the shader's vertex position attribute
+        gl.vertexAttribPointer(
+            shader.attributes.aColor,
+            3,
+            gl.FLOAT,
+            false,
+            0,
+            0
+        )
+
+        // bind the indices buffer to the active ELEMENT array buffer
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indicesBuffer);
+        // do the actual drawing, using the specified wireframe mode, and indicating the number of indices to be processed
+        gl.drawElements(
+            primitiveType,
+            this.indicesBuffer.numValues,
+            gl.UNSIGNED_SHORT,
+            0
+        );
+        // unbind buffers
+        gl.bindBuffer(gl.ARRAY_BUFFER, null);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+
+        this.scene.setActiveShader(this.scene.defaultShader)
+        this.time += 1
     }
 
     generateField(){
         this.vertices = []
         this.indices = []
+        this.colors = []
         for(let i = 0; i < this.bladeCount; i++){
             const x = Math.random() * this.radius;
             const z = Math.random() * this.radius;
             const blade = this.generateBlade([x,this.yPos,z], i*5)
             this.vertices.push(...blade.vertices)
             this.indices.push(...blade.indices)
+            this.colors.push(...blade.colors)
         }
         this.initGLBuffers()
+        this.initColorBuffer()
     }
 
     /**
