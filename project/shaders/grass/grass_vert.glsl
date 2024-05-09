@@ -16,7 +16,7 @@ void main(){
     vertexColor = aColor;
 
     float waveSize = 10.0f;   
-    float tipDistance = 0.3f;
+    float tipDistance = 0.4f;
     float centerDistance = 0.1f;
 
     vec4 initalWorldPos = uMVMatrix * vec4(aVertexPosition, 1.0);
