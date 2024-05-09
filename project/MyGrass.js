@@ -10,7 +10,7 @@ const PLANE_RADIUS = 30;
 
 
 export class MyGrass extends CGFobject{
-
+    static shader = null;
     /**
      * 
      * @param {CGFscene} scene 
@@ -18,14 +18,16 @@ export class MyGrass extends CGFobject{
      * @param {number} radius 
      * @param {number} yPos 
      */
-    constructor(scene, bladeCount=12000, radius=25, yPos=0){
+    constructor(scene, radius=25, bladeCount=13000, yPos=0){
         super(scene)
         this.scene = scene
         this.bladeCount = bladeCount
         this.radius = radius
         this.yPos = yPos
         this.time = 0;
-        this.shader = new CGFshader(this.scene.gl, "shaders/grass/grass_vert.glsl", "shaders/grass/grass_frag.glsl")
+        if(!MyGrass.shader){
+            MyGrass.shader = new CGFshader(this.scene.gl, "shaders/grass/grass_vert.glsl", "shaders/grass/grass_frag.glsl")
+        }
         this.generateField()
     }
 
@@ -44,15 +46,14 @@ export class MyGrass extends CGFobject{
     }
 
     drawElements(primitiveType){
-        this.scene.setActiveShader(this.shader)
-        this.shader.setUniformsValues({"uTime": this.time})
-        var shader = this.scene.activeShader;
+        MyGrass.shader.setUniformsValues({"uTime": this.time})
+        var shader = MyGrass.shader;
         var gl = this.scene.gl;
         // update matrices on shader
         gl.uniformMatrix4fv(
           shader.uniforms.uMVMatrix,
           false,
-          this.scene.activeMatrix
+          this.scene.getMatrix()
         );
 
         gl.uniformMatrix4fv(
@@ -100,7 +101,6 @@ export class MyGrass extends CGFobject{
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
 
-        this.scene.setActiveShader(this.scene.defaultShader)
         this.time += 1
     }
 

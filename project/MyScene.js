@@ -5,7 +5,7 @@ import { MySphere } from "./MySphere.js";
 import { MyRock } from "./MyRock.js";
 import { MyRockSet } from "./MyRockSet.js";
 import { MyRockPyramid } from "./MyRockPyramid.js";
-import { MyGrass } from "./MyGrass.js";
+import { MyBigGrass } from "./MyBigGrass.js";
 
 /**
  * MyScene
@@ -35,7 +35,7 @@ export class MyScene extends CGFscene {
 
     this.sphere = new MySphere(this, 20, 20);
     this.sphereVisbility = false;
-    this.grass = new MyGrass(this);
+    this.grass = new MyBigGrass(this);
 
     this.panoramaTexture = new CGFtexture(this, 'images/panorama.jpg')
     this.panorama = new MyPanorama(this, this.panoramaTexture)
@@ -105,7 +105,7 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     if(this.rockVisibility) this.rock.display()
     if(this.rockSetVisibility) this.rockSet.display()
     if(this.rockPyramidVisibility) this.rockPyramid.display()
-    this.grass.display()
+    this.grass.display();
     this.pushMatrix();
     this.appearance.apply();
     this.translate(0,-100,0);
