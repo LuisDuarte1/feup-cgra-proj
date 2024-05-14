@@ -1,111 +1,88 @@
 import {CGFobject} from '../../lib/CGF.js';
 
-
 export class MyCylinder extends CGFobject {
-	constructor(scene, slices, stacks) {
-		super(scene);
-		this.initBuffers(slices, stacks);
-	}
-
-    replaceVertex(src, index, dest){
-        dest[index*3] = src[0]
-        dest[index*3+1] = src[1]
-        dest[index*3+2] = src[2]
+    constructor(scene, slices, stacks, top = [0,1,0]) {
+        super(scene);
+        this.slices = slices;
+        this.stacks = stacks;
+        this.top = top;
+        this.x_offset = top[0];
+        this.z_offset = top[2];
+        this.initBuffers();
     }
 
-    normalize(v1){
-        const magnitude = Math.sqrt(v1[0]*v1[0] + v1[1]*v1[1] +v1[2]*v1[2])
-        return [v1[0]/magnitude, v1[1]/magnitude, v1[2]/magnitude]
+    initBuffers() {
+        this.vertices = []
+        this.indices = []
+        this.normals = []
+        this.texCoords = []
+
+        let factor = 2 * Math.PI / this.slices
+        let stack_height = 1 / (this.stacks)
+        let x_stack = this.x_offset / this.stacks
+        let z_stack = this.z_offset / this.stacks
+
+        this.generateLateral(factor, stack_height, x_stack, z_stack);
+        this.generateTopAndBottom(factor, x_stack, z_stack, stack_height);
+        
+        this.primitiveType = this.scene.gl.TRIANGLES;
+        this.initGLBuffers();
     }
-	
-	initBuffers(slices, stacks) {
-        const factor = 2*Math.PI/slices
 
-        let face_vertices = [0,0,0]
+    generateLateral(factor, stack_height, x_stack, z_stack) {
 
-        for(let i = 0; i < 2*Math.PI;  i += factor){
-            face_vertices.push(Math.cos(i), Math.sin(i), 0)
-        }
-        face_vertices = face_vertices.slice(0, (slices+1)*3)
-        
-
-        let face_indices = []
-
-        for(let i = 0; i < slices-1; i++){
-            face_indices.push(0, i+1, i+2)
-        }
-        face_indices.push(0,slices, 1)
-        console.log(face_indices)
-
-		this.vertices = [
-            ...face_vertices,
-            ...face_vertices.map((value, index, _) => {
-                if ((index+1) % 3 == 0)
-                    return 1
-                return value
-            })
-		];
-
-
-		//Counter-clockwise reference of vertices
-		this.indices = [
-            ...[...face_indices].reverse(),
-            ...face_indices.map((value) => value + slices + 1)
-		];
-
-        this.normals = [
-        ]
-        
-        for(let i= 0; i < slices+1; i++){
-            this.normals.push(0,0,-1)
-        }
-        for(let i= 0; i < slices+1; i++){
-            this.normals.push(0,0,1)
-        }
-
-        for(let i = 0; i < stacks; i++){
-            const right_face = face_vertices.slice(3).map((value, index, _) => {
-                if ((index+1) % 3 == 0)
-                    return i/stacks
-                return value
-            })
-            const left_face  = face_vertices.slice(3).map((value, index, _) => {
-                if ((index+1) % 3 == 0)
-                    return (i+1)/stacks
-                return value
-            })
-
-            this.vertices.push(
-                ...right_face,
-                ...left_face,
-            )
-
-            //we pre-fill the normals with zero to make it the normal fill easier
-            this.normals.push(...Array(right_face.length*2).fill(0))
-
-            for (let j = 0; j < slices; j++){
-                const faceVerticesCount = (slices+1)*2
-                const normal = this.normalize([Math.cos(factor*j), Math.sin(factor*j), 0])
-                this.indices.push(faceVerticesCount+slices*(i*2) + j)
-                this.indices.push(faceVerticesCount+slices*(i*2) + ((1 + j) % slices))
-                this.indices.push(faceVerticesCount+slices*(i*2+1) + ((1 + j) % slices))
-                
-                this.indices.push(faceVerticesCount+slices*(i*2+1) + ((1 + j) % slices))
-                this.indices.push(faceVerticesCount+slices*(i*2+1) + j)
-                this.indices.push(faceVerticesCount+slices*(i*2) + j)
-
-                this.replaceVertex(normal, faceVerticesCount+slices*(i*2) + j, this.normals)
-                this.replaceVertex(normal, faceVerticesCount+slices*(i*2+1) + j, this.normals)
-
+        for(let i = 0; i < this.slices + 1; i++){
+            for (let j = 0; j < this.stacks + 1; j++){
+                let x = Math.cos(i * factor)
+                let z = Math.sin(i * factor)
+                this.vertices.push(x + j * x_stack, j * stack_height, z + j * z_stack)
+                this.normals.push(x, 0, z)
+                this.texCoords.push(i / this.slices, j / this.stacks)
             }
-
         }
-		//The defined indices (and corresponding vertices)
-		//will be read in groups of three to draw triangles
-		this.primitiveType = this.scene.gl.TRIANGLES;
-        console.log(this.vertices.length, this.normals.length)
 
-		this.initGLBuffers();
-	}
+        for (let i = 0; i < this.slices; i++){
+            for (let j = 0; j < this.stacks; j++){
+                this.indices.push(
+                    i * (this.stacks + 1) + j, 
+                    i * (this.stacks + 1) + j + 1, 
+                    (i + 1) * (this.stacks + 1) + j, 
+                    i * (this.stacks + 1) + j + 1, 
+                    (i + 1) * (this.stacks + 1) + j + 1, 
+                    (i + 1) * (this.stacks + 1) + j
+                );
+            }
+        }
+    }
+
+    generateTopAndBottom(factor, x_stack, z_stack, stack_height) {
+        stack_height += 1
+        this.vertices.push(0, 0, 0, this.top[0], this.top[1], this.top[2])
+        this.normals.push(0, -1, 0, 0, 1, 0)
+        this.texCoords.push(0.5, 0.5, 0.5, 0.5)
+        
+        const base = (this.slices + 1) * (this.stacks + 1)
+
+        for (let i = 0; i < this.slices + 1; i++){
+            let x = Math.cos(i * factor)
+            let z = Math.sin(i * factor)
+            this.vertices.push(x, 0, z, x + x_stack * this.z_offset, 1, z + this.z_offset * z_stack)
+            this.normals.push(0, -1, 0, 0, 1, 0)
+            this.texCoords.push(0.5 + x / 2, 0.5 - z / 2, 0.5 + this.x_offset / 2, 0.5 - this.z_offset / 2)
+        }
+
+        // top base
+        for (let i = 0; i < this.slices; i++){
+            let a = i * stack_height + this.stacks
+            const b = a + stack_height
+            this.indices.push(base + 1, b, a)
+        }  
+
+        // bot base
+        for (let i = 0; i < this.slices; i++){
+            let a = i * stack_height
+            let b = a + stack_height
+            this.indices.push(base, a, b)
+        } 
+    }
 }
-

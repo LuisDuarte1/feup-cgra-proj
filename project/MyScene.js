@@ -10,6 +10,8 @@ import { MyRockPyramid } from "./MyRockPyramid.js";
 import { MyReceptacle } from "./MyReceptacle.js";
 import { MyFlower } from "./MyFlower.js";
 import { MyCorolla } from "./MyCorolla.js";
+import { MyCylinder } from "./primitives/MyCylinder.js";
+import { MyLeaf } from "./MyLeaf.js";
 
 /**
  * MyScene
@@ -37,13 +39,10 @@ export class MyScene extends CGFscene {
     //Initialize scene objects
     this.axis = new CGFaxis(this);
     this.plane = new MyPlane(this,30);
-
     this.petal = new MyPetal(this, Math.PI/4, 1);
     this.petalVisibility = false;
-    this.stem = new MyStem(this, 30);
-    this.stemVisibility = false;
     this.corolla = new MyCorolla(this);
-    this.corollaVisibility = true;
+    this.corollaVisibility = false;
     this.receptacle = new MyReceptacle(this, 20, 20);
     this.receptacleVisibility = false;
     this.sphere = new MySphere(this, 20, 20);
@@ -52,8 +51,23 @@ export class MyScene extends CGFscene {
     this.flower = new MyFlower(this)
     this.flowerVisibility = false;
 
+    this.stemTex = new CGFtexture(this, "images/stem.png");
+    this.stemAppearance = new CGFappearance(this);
+    this.stemAppearance.setTexture(this.stemTex);
+    this.stemAppearance.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.leafAppearance = new CGFappearance(this);
+    this.leafAppearance.loadTexture('images/leaf.jpeg');
+    this.leafAppearance.setTextureWrap('REPEAT', 'REPEAT');
+    
+    this.stem = new MyStem(this, 4, 3, 1, 0.2, 0.07, this.stemAppearance)
+    this.stemVisibility = false;
+
     this.panoramaTexture = new CGFtexture(this, 'images/panorama.jpg')
     this.panorama = new MyPanorama(this, this.panoramaTexture)
+
+    this.leaf = new MyLeaf(this, this.leafAppearance);
+    this.leafVisibility = true;
 
     this.rock = new MyRock(this)
     this.rockPyramid = new MyRockPyramid(this, 10, 10)
@@ -63,7 +77,7 @@ export class MyScene extends CGFscene {
     this.rockSetVisibility = false
 
     //Objects connected to MyInterface
-    this.displayAxis = true;
+    this.displayAxis = false;
     this.scaleFactor = 1;
 
     this.enableTextures(true);
@@ -77,6 +91,9 @@ this.texture = new CGFtexture(this, "images/terrain.jpg");
 this.appearance = new CGFappearance(this);
 this.appearance.setTexture(this.texture);
 this.appearance.setTextureWrap('REPEAT', 'REPEAT');
+
+
+
 
   }
   initLights() {
@@ -125,6 +142,9 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     if(this.flowerVisibility) this.flower.display();
     if(this.petalVisibility) this.petal.display();
     if(this.corollaVisibility) this.corolla.display();
+    if(this.stemVisibility) this.stem.display();
+    if(this.leafVisibility) this.leaf.display();
+   
     
     this.pushMatrix();
     this.appearance.apply();

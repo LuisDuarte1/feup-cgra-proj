@@ -24,10 +24,14 @@ export class MyInterface extends CGFinterface {
         this.gui.add(this.scene, 'scaleFactor', 0.1, 5).name('Scale Factor');
 
         this.gui.add(this.scene, 'flowerVisibility').name('Flower')
+        this.gui.add(this.scene, 'petalVisibility').name('Petal')
+        this.gui.add(this.scene, 'corollaVisibility').name('Corolla')
 
         this.gui.add(this.scene, 'rockVisibility').name('Rock')
         this.gui.add(this.scene, 'rockSetVisibility').name('RockSet')
         this.gui.add(this.scene, 'rockPyramidVisibility').name('Rock Pyramid')
+
+
 
         return true;
     }
