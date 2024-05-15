@@ -3,7 +3,7 @@ import { MyPetal } from './MyPetal.js';
 import { MyReceptacle } from './MyReceptacle.js';
 
 export class MyCorolla extends CGFobject {
-    constructor(scene, corollaRadius, numPetals, petalAngle, maxAngle, minAngle, petalColor, receptacleRadius, receptacleColor) {
+    constructor(scene, corollaRadius, numPetals, petalAngle, maxAngle, minAngle, innerPetalColor, outerPetalColor, receptacleRadius, receptacleColor) {
         super(scene);
         this.corollaRadius = corollaRadius;
         this.receptacleRadius = receptacleRadius;
@@ -11,7 +11,8 @@ export class MyCorolla extends CGFobject {
         this.petalAngle = petalAngle;
         this.petal = new MyPetal(scene, petalAngle, corollaRadius - receptacleRadius);
         this.receptacle = new MyReceptacle(scene, receptacleRadius);
-        this.petalColor = petalColor;
+        this.innerPetalColor = innerPetalColor;
+        this.outerPetalColor = outerPetalColor;
         this.receptacleColor = receptacleColor;
         this.maxAngle = maxAngle;
         this.minAngle = minAngle;
@@ -31,6 +32,7 @@ export class MyCorolla extends CGFobject {
 
         this.scene.pushMatrix();
         this.scene.rotate(Math.PI/2, 1, 0, 0);
+        this.receptacleColor.apply();
         this.receptacle.display();
         this.scene.popMatrix();
 
@@ -40,6 +42,7 @@ export class MyCorolla extends CGFobject {
             this.scene.pushMatrix();
             this.scene.rotate(angle * i, 0, 0, 1);
             this.scene.translate(0, this.receptacle.height - 0.2, 0);
+            this.innerPetalColor.apply();
             this.petal.display();
             this.scene.popMatrix();
 
@@ -47,6 +50,7 @@ export class MyCorolla extends CGFobject {
             this.scene.pushMatrix();
             this.scene.rotate(angle * (i + 0.5), 0, 0, 1);
             this.scene.translate(0, this.receptacle.height - 0.4, 0);
+            this.outerPetalColor.apply();
             this.petal.display();
             this.scene.popMatrix();
         }

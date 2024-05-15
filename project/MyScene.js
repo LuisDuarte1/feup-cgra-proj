@@ -59,6 +59,20 @@ export class MyScene extends CGFscene {
     this.leafAppearance.setTexture(this.leafTex);
     this.leafAppearance.setTextureWrap('REPEAT', 'REPEAT');
     
+    this.innerPetalTex = new CGFtexture(this, "images/innerPetal.png");
+    this.innerPetalAppearance = new CGFappearance(this);
+    this.innerPetalAppearance.setTexture(this.innerPetalTex);
+    this.innerPetalAppearance.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.outerPetalTex = new CGFtexture(this, "images/outerPetal.png");
+    this.outerPetalAppearance = new CGFappearance(this);
+    this.outerPetalAppearance.setTexture(this.outerPetalTex);
+    this.outerPetalAppearance.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.receptacleTex = new CGFtexture(this, "images/receptacle.jpeg");
+    this.receptacleAppearance = new CGFappearance(this);
+    this.receptacleAppearance.setTexture(this.receptacleTex);
+    this.receptacleAppearance.setTextureWrap('REPEAT', 'REPEAT');
 
     this.panoramaTexture = new CGFtexture(this, 'images/panorama.jpg')
     this.panorama = new MyPanorama(this, this.panoramaTexture)
@@ -76,7 +90,7 @@ export class MyScene extends CGFscene {
     this.stem = new MyStem(this, 5, 3, 1, 0.2, 0.03, this.stemAppearance, this.leafAppearance)
     this.stemVisibility = false;
 
-    this.flower = new MyFlower(this, 5, 3, 0.04, this.stemAppearance, this.leafAppearance, 1.5, 8, Math.PI/4, Math.PI/4, 0, [1, 0, 0], 0.5, [1, 1, 0])
+    this.flower = new MyFlower(this, 5, 3, 0.04, this.stemAppearance, this.leafAppearance, 1.5, 8, Math.PI/4, Math.PI/4, 0, this.innerPetalAppearance, this.outerPetalAppearance, 0.5, this.receptacleAppearance)
     this.flowerVisibility = true;
 
     //Objects connected to MyInterface
