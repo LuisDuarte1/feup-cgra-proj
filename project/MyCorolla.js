@@ -3,11 +3,26 @@ import { MyPetal } from './MyPetal.js';
 import { MyReceptacle } from './MyReceptacle.js';
 
 export class MyCorolla extends CGFobject {
-    constructor(scene) {
+    constructor(scene, corollaRadius, numPetals, petalAngle, maxAngle, minAngle, petalColor, receptacleRadius, receptacleColor) {
         super(scene);
-        this.petal = new MyPetal(scene, Math.PI/4, 1);
-        this.receptacle = new MyReceptacle(scene);
-        this.numPetals = 8;
+        this.corollaRadius = corollaRadius;
+        this.receptacleRadius = receptacleRadius;
+        this.numPetals = numPetals
+        this.petalAngle = petalAngle;
+        this.petal = new MyPetal(scene, petalAngle, corollaRadius - receptacleRadius);
+        this.receptacle = new MyReceptacle(scene, receptacleRadius);
+        this.petalColor = petalColor;
+        this.receptacleColor = receptacleColor;
+        this.maxAngle = maxAngle;
+        this.minAngle = minAngle;
+        this.generateAngles();
+    }
+
+    generateAngles(){
+        this.angles = [];
+        for (let i = 0; i < this.numPetals; i++) {
+            this.angles.push(Math.random() * (this.maxAngle - this.minAngle) + this.minAngle);
+        }
     }
 
     display() {

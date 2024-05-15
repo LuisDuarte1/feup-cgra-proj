@@ -76,7 +76,7 @@ export class MyScene extends CGFscene {
     this.stem = new MyStem(this, 5, 3, 1, 0.2, 0.03, this.stemAppearance, this.leafAppearance)
     this.stemVisibility = false;
 
-    this.flower = new MyFlower(this, 6, 3, 0.5, 0.4, 0.03, this.stemAppearance, this.leafAppearance)
+    this.flower = new MyFlower(this, 5, 3, 0.04, this.stemAppearance, this.leafAppearance, 1.5, 8, Math.PI/4, Math.PI/4, 0, [1, 0, 0], 0.5, [1, 1, 0])
     this.flowerVisibility = true;
 
     //Objects connected to MyInterface

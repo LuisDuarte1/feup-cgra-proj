@@ -19,7 +19,7 @@ export class MyLeaf extends CGFobject {
     }
     display() {
         this.scene.pushMatrix();
-        this.scene.scale(0.008, 0.5, 0.008);
+        this.scene.scale(0.008, 0.4, 0.008);
         this.leafStem.apply();
         this.cylinder.display();
         this.scene.popMatrix();
