@@ -3,36 +3,31 @@ import { MyStem } from './MyStem.js';
 import { MyCorolla } from './MyCorolla.js';
 
 export class MyFlower extends CGFobject {
-    constructor(scene) {
+    constructor(scene, numCylinders, height, maxHeight, minHeight, radius, stemAppearance, leafAppearance) {
         super(scene);
-        this.stem = new MyStem(scene);
+        this.numCylinders = numCylinders;
+        this.height = height;
+        this.maxHeight = maxHeight;
+        this.minHeight = minHeight;
+        this.radius = radius;
+        this.stemAppearance = stemAppearance;
+        this.leafAppearance = leafAppearance;
+        this.stem = new MyStem(scene, this.numCylinders, this.height, this.maxHeight, this.minHeight, this.radius, this.stemAppearance, this.leafAppearance);
         this.corolla = new MyCorolla(scene);
         this.initMaterials();
     }
     initMaterials() {
-        this.blueTriangleMaterial = new CGFappearance(this.scene);
-        this.blueTriangleMaterial.setAmbient(0.1, 0.1, 0.3, 1);
-        this.blueTriangleMaterial.setDiffuse(0.2, 0.2, 0.8, 1);
-        this.blueTriangleMaterial.setSpecular(1.0, 1.0, 1.0, 1);
-        this.blueTriangleMaterial.setShininess(10.0);
-
-        this.greenTriangleMaterial = new CGFappearance(this.scene);
-        this.greenTriangleMaterial.setAmbient(0.1, 0.3, 0.1, 1);
-        this.greenTriangleMaterial.setDiffuse(0.2, 0.8, 0.2, 1);
-        this.greenTriangleMaterial.setSpecular(1.0, 1.0, 1.0, 1);
-        this.greenTriangleMaterial.setShininess(10.0);
     }
     display() {
         this.scene.pushMatrix();
-        this.greenTriangleMaterial.apply();
-        this.stem.display();
-        this.scene.popMatrix();
-
-        this.scene.pushMatrix();
-        this.blueTriangleMaterial.apply();
-        let stemHeight = this.stem.cylinders[0].height;
-        this.scene.translate(0, stemHeight, 0);
+        this.scene.translate(0, this.height, 0);
+        this.scene.scale(0.8, 0.8, 0.8);
+        if (this.numCylinders % 2) this.scene.rotate(Math.PI + Math.PI/6, 1, 0, 0);
+        else this.scene.rotate(-Math.PI/6, 1, 0, 0);
         this.corolla.display();
+        this.scene.popMatrix();
+        this.scene.pushMatrix();
+        this.stem.display();
         this.scene.popMatrix();
     }
 }

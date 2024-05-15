@@ -48,26 +48,23 @@ export class MyScene extends CGFscene {
     this.sphere = new MySphere(this, 20, 20);
     this.sphereVisbility = false;
 
-    this.flower = new MyFlower(this)
-    this.flowerVisibility = false;
 
     this.stemTex = new CGFtexture(this, "images/stem.png");
     this.stemAppearance = new CGFappearance(this);
     this.stemAppearance.setTexture(this.stemTex);
     this.stemAppearance.setTextureWrap('REPEAT', 'REPEAT');
 
+    this.leafTex = new CGFtexture(this, "images/leaf.jpeg");
     this.leafAppearance = new CGFappearance(this);
-    this.leafAppearance.loadTexture('images/leaf.jpeg');
+    this.leafAppearance.setTexture(this.leafTex);
     this.leafAppearance.setTextureWrap('REPEAT', 'REPEAT');
     
-    this.stem = new MyStem(this, 4, 3, 1, 0.2, 0.07, this.stemAppearance)
-    this.stemVisibility = false;
 
     this.panoramaTexture = new CGFtexture(this, 'images/panorama.jpg')
     this.panorama = new MyPanorama(this, this.panoramaTexture)
 
     this.leaf = new MyLeaf(this, this.leafAppearance);
-    this.leafVisibility = true;
+    this.leafVisibility = false;
 
     this.rock = new MyRock(this)
     this.rockPyramid = new MyRockPyramid(this, 10, 10)
@@ -75,6 +72,12 @@ export class MyScene extends CGFscene {
     this.rockVisibility = false
     this.rockPyramidVisibility = false
     this.rockSetVisibility = false
+
+    this.stem = new MyStem(this, 5, 3, 1, 0.2, 0.03, this.stemAppearance, this.leafAppearance)
+    this.stemVisibility = false;
+
+    this.flower = new MyFlower(this, 6, 3, 0.5, 0.4, 0.03, this.stemAppearance, this.leafAppearance)
+    this.flowerVisibility = true;
 
     //Objects connected to MyInterface
     this.displayAxis = false;
