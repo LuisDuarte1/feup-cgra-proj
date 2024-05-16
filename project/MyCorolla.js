@@ -9,13 +9,16 @@ export class MyCorolla extends CGFobject {
         this.receptacleRadius = receptacleRadius;
         this.numPetals = numPetals
         this.petalAngle = petalAngle;
-        this.petal = new MyPetal(scene, petalAngle, corollaRadius - receptacleRadius);
+        this.innerPetal = new MyPetal(scene, petalAngle, corollaRadius - receptacleRadius);
+        this.outerPetal = new MyPetal(scene, Math.PI/9, corollaRadius - receptacleRadius);
         this.receptacle = new MyReceptacle(scene, receptacleRadius);
         this.innerPetalColor = innerPetalColor;
         this.outerPetalColor = outerPetalColor;
         this.receptacleColor = receptacleColor;
         this.maxAngle = maxAngle;
         this.minAngle = minAngle;
+        let petalRadius = corollaRadius - receptacleRadius;
+        this.width = 2 * Math.PI * petalRadius / numPetals;
         this.generateAngles();
     }
 
@@ -41,17 +44,22 @@ export class MyCorolla extends CGFobject {
             // inner layer
             this.scene.pushMatrix();
             this.scene.rotate(angle * i, 0, 0, 1);
-            this.scene.translate(0, this.receptacle.height - 0.2, 0);
+            this.scene.translate(0, this.receptacleRadius - 0.1, 0);
+            this.scene.scale(this.width, 1, this.width)
+            this.scene.rotate(this.angles[i], 1, 0, 0);
             this.innerPetalColor.apply();
-            this.petal.display();
+            this.innerPetal.display();
             this.scene.popMatrix();
 
             // outer layer
             this.scene.pushMatrix();
             this.scene.rotate(angle * (i + 0.5), 0, 0, 1);
-            this.scene.translate(0, this.receptacle.height - 0.4, 0);
+            this.scene.translate(0, this.receptacleRadius - 0.15, 0.04);
+            if (i % 2) this.scene.translate(0, 0, 0.05);
+            this.scene.scale(this.width, 1, this.width)
+            this.scene.translate(0, 0, -0.1);
             this.outerPetalColor.apply();
-            this.petal.display();
+            this.outerPetal.display();
             this.scene.popMatrix();
         }
     }

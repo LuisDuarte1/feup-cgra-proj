@@ -12,6 +12,7 @@ export class MyPetal extends CGFobject {
    
         // upper petal
         this.scene.pushMatrix();
+        this.scene.translate(0, this.height/2, 0);
         this.scene.rotate(this.petalAngle, 1, 0, 0);
         this.scene.scale(1, this.height/2, 1);
         this.triangle.display();
@@ -19,6 +20,7 @@ export class MyPetal extends CGFobject {
 
         // lower petal
         this.scene.pushMatrix();
+        this.scene.translate(0, this.height/2, 0);
         this.scene.scale(1, this.height/2, 1);
         this.scene.rotate(Math.PI, 0, 0, 1);
         this.triangle.display();

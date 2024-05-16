@@ -10,7 +10,6 @@ import { MyRockPyramid } from "./MyRockPyramid.js";
 import { MyReceptacle } from "./MyReceptacle.js";
 import { MyFlower } from "./MyFlower.js";
 import { MyCorolla } from "./MyCorolla.js";
-import { MyCylinder } from "./primitives/MyCylinder.js";
 import { MyLeaf } from "./MyLeaf.js";
 
 /**
@@ -39,12 +38,6 @@ export class MyScene extends CGFscene {
     //Initialize scene objects
     this.axis = new CGFaxis(this);
     this.plane = new MyPlane(this,30);
-    this.petal = new MyPetal(this, Math.PI/4, 1);
-    this.petalVisibility = false;
-    this.corolla = new MyCorolla(this);
-    this.corollaVisibility = false;
-    this.receptacle = new MyReceptacle(this, 20, 20);
-    this.receptacleVisibility = false;
     this.sphere = new MySphere(this, 20, 20);
     this.sphereVisbility = false;
 
@@ -69,16 +62,13 @@ export class MyScene extends CGFscene {
     this.outerPetalAppearance.setTexture(this.outerPetalTex);
     this.outerPetalAppearance.setTextureWrap('REPEAT', 'REPEAT');
 
-    this.receptacleTex = new CGFtexture(this, "images/receptacle.jpeg");
+    this.receptacleTex = new CGFtexture(this, "images/receptacle.png");
     this.receptacleAppearance = new CGFappearance(this);
     this.receptacleAppearance.setTexture(this.receptacleTex);
-    this.receptacleAppearance.setTextureWrap('REPEAT', 'REPEAT');
+    this.receptacleAppearance.setTextureWrap('CLAMP_TO_EDGE', 'CLAMP_TO_EDGE');
 
     this.panoramaTexture = new CGFtexture(this, 'images/panorama.jpg')
     this.panorama = new MyPanorama(this, this.panoramaTexture)
-
-    this.leaf = new MyLeaf(this, this.leafAppearance);
-    this.leafVisibility = false;
 
     this.rock = new MyRock(this)
     this.rockPyramid = new MyRockPyramid(this, 10, 10)
@@ -86,9 +76,6 @@ export class MyScene extends CGFscene {
     this.rockVisibility = false
     this.rockPyramidVisibility = false
     this.rockSetVisibility = false
-
-    this.stem = new MyStem(this, 5, 3, 1, 0.2, 0.03, this.stemAppearance, this.leafAppearance)
-    this.stemVisibility = false;
 
     this.flower = new MyFlower(this, 5, 3, 0.04, this.stemAppearance, this.leafAppearance, 1.5, 8, Math.PI/4, Math.PI/4, 0, this.innerPetalAppearance, this.outerPetalAppearance, 0.5, this.receptacleAppearance)
     this.flowerVisibility = true;
@@ -155,12 +142,7 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     if(this.rockVisibility) this.rock.display()
     if(this.rockSetVisibility) this.rockSet.display()
     if(this.rockPyramidVisibility) this.rockPyramid.display()
-    if(this.receptacleVisibility) this.receptacle.display();
     if(this.flowerVisibility) this.flower.display();
-    if(this.petalVisibility) this.petal.display();
-    if(this.corollaVisibility) this.corolla.display();
-    if(this.stemVisibility) this.stem.display();
-    if(this.leafVisibility) this.leaf.display();
    
     
     this.pushMatrix();
