@@ -24,7 +24,7 @@ export class MyGrass extends CGFobject{
         this.bladeCount = bladeCount
         this.radius = radius
         this.yPos = yPos
-        this.time = 0;
+        this.time = Math.random() * 100;
         if(!MyGrass.shader){
             MyGrass.shader = new CGFshader(this.scene.gl, "shaders/grass/grass_vert.glsl", "shaders/grass/grass_frag.glsl")
         }
