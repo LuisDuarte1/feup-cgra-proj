@@ -16,6 +16,7 @@ export class MyBeeHead extends CGFobject {
     initMaterials() {
         this.beeHeadTex = new CGFtexture(this.scene, "images/beeHead.png");
         this.beeHeadAppearance = new CGFappearance(this.scene);
+        this.beeHeadAppearance.setAmbient(0.6, 0.6, 0.6, 1.0);
         this.beeHeadAppearance.setTexture(this.beeHeadTex);
         this.beeHeadAppearance.setTextureWrap('CLAMP_TO_EDGE', 'CLAMP_TO_EDGE');
 

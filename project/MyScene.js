@@ -74,7 +74,7 @@ export class MyScene extends CGFscene {
     this.rockPyramid = new MyRockPyramid(this, 10, 10)
     this.rockSet = new MyRockSet(this, 10, 10)
     this.bee = new MyBee(this)
-    this.beeVisibility = false
+    this.beeVisibility = true
 
     this.rockVisibility = false
     this.rockPyramidVisibility = false
@@ -88,9 +88,9 @@ export class MyScene extends CGFscene {
     this.beeAntennaeVisibility = false
 
     this.MyBeeThorax = new MyBeeThorax(this)
-    this.beeThoraxVisibility = true
+    this.beeThoraxVisibility = false
 
-    this.MyBeeLegs = new MyBeeLegs(this)
+    this.MyBeeLegs = new MyBeeLegs(this, Math.PI/6)
     this.beeLegsVisibility = false
 
     this.flower = new MyFlower(this, 5, 3, 0.04, this.stemAppearance, this.leafAppearance, 1.5, 8, Math.PI/4, Math.PI/4, 0, this.innerPetalAppearance, this.outerPetalAppearance, 0.5, this.receptacleAppearance)
@@ -163,6 +163,7 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     if(this.beeAntennaeVisibility) this.MyBeeAntennae.display()
     if(this.beeThoraxVisibility) this.MyBeeThorax.display()
     if(this.beeLegsVisibility) this.MyBeeLegs.display()
+    if (this.beeVisibility) this.bee.display()
    
     this.pushMatrix();
     this.appearance.apply();

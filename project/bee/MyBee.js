@@ -1,6 +1,6 @@
 import { CGFappearance, CGFobject, CGFscene } from "../../lib/CGF.js";
-import { MySphere } from "../primitives/MySphere.js";
-import { MyCylinder } from "../primitives/MyCylinder.js";
+import { MyBeeHead } from "./MyBeeHead.js";
+import { MyBeeThorax } from "./MyBeeThorax.js";
 import { setColorRGB } from "../utils.js";
 
 
@@ -13,32 +13,24 @@ export class MyBee extends CGFobject{
     constructor(scene){
         super(scene)
         this.scene = scene
-        this.bodyAppearence = new CGFappearance(scene)
-        setColorRGB(this.bodyAppearence, 247, 243, 7)
-        this.sphere = new MySphere(scene, 20, 20, false, 0.8, 1, true)
-        this.cylinder = new MyCylinder(scene, 80, 20, true)
+        this.head = new MyBeeHead(scene)
+        this.thorax = new MyBeeThorax(scene)
     }
 
-    /**
-     * @property {CGFscene} scene
-     * @property {MySphere} sphere
-     * @property {CGFappearance} bodyAppearence
-     */
 
     display(){
-        // this.sphere.enableNormalViz()
-        // this.cylinder.enableNormalViz()
-        this.bodyAppearence.apply()
-
         this.scene.pushMatrix()
-        this.scene.translate(0,0,-0.5)
-        this.scene.scale(1,1,1.5)
-        this.cylinder.display()
+        this.scene.rotate(-Math.PI/2, 0, 1, 0)
+        this.scene.rotate(-Math.PI/6, 1, 0, 0)
+        this.scene.scale(0.65, 0.65, 0.65)
+        this.head.display()
         this.scene.popMatrix()
 
         this.scene.pushMatrix()
-        this.scene.translate(0,0,1)
-        this.sphere.display()
+        this.scene.translate(0.7, 0, 0)
+        this.scene.scale(0.9, 0.9, 0.9)
+        this.thorax.display()
         this.scene.popMatrix()
+
     }
 }
