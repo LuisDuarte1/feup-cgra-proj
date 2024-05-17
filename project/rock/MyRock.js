@@ -1,6 +1,6 @@
-import { CGFappearance, CGFobject } from "../lib/CGF.js";
-import { MySphere } from "./MySphere.js";
-import { applyScalarToPointInDirection, changeVertex, setColorRGB } from "./utils.js";
+import { CGFappearance, CGFobject } from "../../lib/CGF.js";
+import { MySphere } from "../primitives/MySphere.js";
+import { applyScalarToPointInDirection, changeVertex, setColorRGB } from "../utils.js";
 
 
 export class MyRock extends CGFobject{

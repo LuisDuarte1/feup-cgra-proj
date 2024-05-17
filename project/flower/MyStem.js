@@ -1,5 +1,5 @@
 import { CGFobject} from '../../lib/CGF.js';
-import { MyCylinder } from './primitives/MyCylinder.js';
+import { MyCylinder } from '../primitives/MyCylinder.js';
 import { MyLeaf } from './MyLeaf.js';
 
 export class MyStem extends CGFobject {

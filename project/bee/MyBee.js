@@ -1,7 +1,7 @@
-import { CGFappearance, CGFobject, CGFscene } from "../lib/CGF.js";
-import { MySphere } from "./MySphere.js";
-import { MyCylinder } from "./MyCylinder.js";
-import { setColorRGB } from "./utils.js";
+import { CGFappearance, CGFobject, CGFscene } from "../../lib/CGF.js";
+import { MySphere } from "../primitives/MySphere.js";
+import { MyCylinder } from "../primitives/MyCylinder.js";
+import { setColorRGB } from "../utils.js";
 
 
 

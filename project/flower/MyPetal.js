@@ -1,5 +1,5 @@
 import {CGFobject, CGFappearance} from '../../lib/CGF.js';
-import { MyTriangle } from './primitives/MyTriangle.js';
+import { MyTriangle } from '../primitives/MyTriangle.js';
 
 export class MyPetal extends CGFobject {
     constructor(scene, petalAngle, petalHeight) {

@@ -1,12 +1,16 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFshader, CGFtexture } from "../lib/CGF.js";
 import { MyPanorama } from "./MyPanorama.js";
-import { MyPlane } from "./MyPlane.js";
-import { MySphere } from "./MySphere.js";
-import { MyRock } from "./MyRock.js";
-import { MyRockSet } from "./MyRockSet.js";
-import { MyRockPyramid } from "./MyRockPyramid.js";
-import { MyBee } from "./MyBee.js";
-import { MyFlower } from "./MyFlower.js";
+import { MyPlane } from "./primitives/MyPlane.js";
+import { MySphere } from "./primitives/MySphere.js";
+import { MyRock } from "./rock/MyRock.js";
+import { MyRockSet } from "./rock/MyRockSet.js";
+import { MyRockPyramid } from "./rock/MyRockPyramid.js";
+import { MyBee } from "./bee/MyBee.js";
+import { MyFlower } from "./flower/MyFlower.js";
+import { MyBeeHead } from "./bee/MyBeeHead.js";
+import { MyBeeAntennae } from "./bee/MyBeeAntennae.js";
+import { MyBeeThorax } from "./bee/MyBeeThorax.js";
+import { MyBeeLegs } from "./bee/MyBeeLegs.js";
 
 /**
  * MyScene
@@ -70,18 +74,30 @@ export class MyScene extends CGFscene {
     this.rockPyramid = new MyRockPyramid(this, 10, 10)
     this.rockSet = new MyRockSet(this, 10, 10)
     this.bee = new MyBee(this)
+    this.beeVisibility = false
 
     this.rockVisibility = false
     this.rockPyramidVisibility = false
     this.rockSetVisibility = false
-    this.beeVisibility = true
 
+
+    this.beeHead = new MyBeeHead(this)
+    this.beeHeadVisibility = false
+
+    this.MyBeeAntennae = new MyBeeAntennae(this)
+    this.beeAntennaeVisibility = false
+
+    this.MyBeeThorax = new MyBeeThorax(this)
+    this.beeThoraxVisibility = true
+
+    this.MyBeeLegs = new MyBeeLegs(this)
+    this.beeLegsVisibility = false
 
     this.flower = new MyFlower(this, 5, 3, 0.04, this.stemAppearance, this.leafAppearance, 1.5, 8, Math.PI/4, Math.PI/4, 0, this.innerPetalAppearance, this.outerPetalAppearance, 0.5, this.receptacleAppearance)
-    this.flowerVisibility = true;
+    this.flowerVisibility = false;
 
     //Objects connected to MyInterface
-    this.displayAxis = false;
+    this.displayAxis = true;
     this.scaleFactor = 1;
 
     this.enableTextures(true);
@@ -142,8 +158,11 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     if(this.rockVisibility) this.rock.display()
     if(this.rockSetVisibility) this.rockSet.display()
     if(this.rockPyramidVisibility) this.rockPyramid.display()
-    if(this.beeVisibility) this.bee.display()
     if(this.flowerVisibility) this.flower.display();
+    if(this.beeHeadVisibility) this.beeHead.display()
+    if(this.beeAntennaeVisibility) this.MyBeeAntennae.display()
+    if(this.beeThoraxVisibility) this.MyBeeThorax.display()
+    if(this.beeLegsVisibility) this.MyBeeLegs.display()
    
     this.pushMatrix();
     this.appearance.apply();

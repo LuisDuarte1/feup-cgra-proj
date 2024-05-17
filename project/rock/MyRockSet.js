@@ -1,4 +1,4 @@
-import { CGFobject, CGFscene } from "../lib/CGF.js";
+import { CGFobject, CGFscene } from "../../lib/CGF.js";
 import { MyRock } from "./MyRock.js";
 
 

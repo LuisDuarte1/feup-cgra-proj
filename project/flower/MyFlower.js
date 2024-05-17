@@ -1,4 +1,4 @@
-import { CGFobject, CGFappearance } from '../lib/CGF.js';
+import { CGFobject, CGFappearance } from '../../lib/CGF.js';
 import { MyStem } from './MyStem.js';
 import { MyCorolla } from './MyCorolla.js';
 

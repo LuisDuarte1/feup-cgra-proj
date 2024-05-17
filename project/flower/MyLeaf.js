@@ -1,7 +1,7 @@
 import {CGFobject, CGFappearance} from '../../lib/CGF.js';
-import { setColorRGB } from "./utils.js";
-import { MyTriangle } from './primitives/MyTriangle.js';
-import { MyCylinder } from './primitives/MyCylinder.js';
+import { setColorRGB } from "../utils.js";
+import { MyTriangle } from '../primitives/MyTriangle.js';
+import { MyCylinder } from '../primitives/MyCylinder.js';
 
 export class MyLeaf extends CGFobject {
     constructor(scene, leafColor) {
