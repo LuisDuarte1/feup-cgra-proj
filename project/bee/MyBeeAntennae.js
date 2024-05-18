@@ -20,7 +20,7 @@ export class MyBeeAntennae extends CGFobject {
         this.scene.pushMatrix();
         this.scene.translate(0, 0.97, 0);
         this.scene.rotate(Math.PI/3, 1, 0, 0);
-        this.scene.scale(0.08, 0.6, 0.08);
+        this.scene.scale(0.08, 0.75, 0.08);
         this.scene.translate(0, 0.76, 0);
         this.sphere.display();
         this.scene.popMatrix();

@@ -11,6 +11,7 @@ import { MyBeeHead } from "./bee/MyBeeHead.js";
 import { MyBeeAntennae } from "./bee/MyBeeAntennae.js";
 import { MyBeeThorax } from "./bee/MyBeeThorax.js";
 import { MyBeeLegs } from "./bee/MyBeeLegs.js";
+import { MyBeeWing } from "./bee/MyBeeWing.js";
 
 /**
  * MyScene
@@ -32,6 +33,8 @@ export class MyScene extends CGFscene {
     this.gl.clearDepth(100.0);
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.enable(this.gl.CULL_FACE);
+    this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+    this.gl.enable(this.gl.BLEND);
     this.gl.depthFunc(this.gl.LEQUAL);
 
     
@@ -95,6 +98,9 @@ export class MyScene extends CGFscene {
 
     this.flower = new MyFlower(this, 5, 3, 0.04, this.stemAppearance, this.leafAppearance, 1.5, 8, Math.PI/4, Math.PI/4, 0, this.innerPetalAppearance, this.outerPetalAppearance, 0.5, this.receptacleAppearance)
     this.flowerVisibility = false;
+
+    this.wing = new MyBeeWing(this)
+    this.wingVisibility = false;
 
     //Objects connected to MyInterface
     this.displayAxis = true;
@@ -164,6 +170,7 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     if(this.beeThoraxVisibility) this.MyBeeThorax.display()
     if(this.beeLegsVisibility) this.MyBeeLegs.display()
     if (this.beeVisibility) this.bee.display()
+    if (this.wingVisibility) this.wing.display()
    
     this.pushMatrix();
     this.appearance.apply();
