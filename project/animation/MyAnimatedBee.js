@@ -2,9 +2,13 @@ import { MyAnimatedObject } from "./MyAnimatedObject.js";
 import { MyBee } from "../bee/MyBee.js";
 
 export class MyAnimatedBee extends MyAnimatedObject{
-    constructor(scene, position, start = 0, end = 1, startTime = 0, duration = Infinity){
+
+
+    constructor(scene, position = [0,0,0], start = 0, end = 1, startTime = 0, duration = Infinity){
         let bee = new MyBee(scene);
         super(scene, bee);
+        this.position = position;
+        this.direction = Math.PI;
     }
 
     tween(x)
@@ -42,6 +46,7 @@ export class MyAnimatedBee extends MyAnimatedObject{
 
     display() {
         this.scene.pushMatrix();
+        this.scene.translate(...this.position);
         this.scene.translate(0,this.animPosition,0);
         super.display();
         this.scene.popMatrix();

@@ -16,8 +16,9 @@ import { MyBigGrass } from "./MyBigGrass.js";
  * @constructor
  */
 export class MyScene extends CGFscene {
-  constructor() {
+  constructor(myInterface) {
     super();
+    this.myInterface = myInterface;
   }
   init(application) {
     super.init(application);
@@ -88,7 +89,7 @@ export class MyScene extends CGFscene {
     this.beeThorax = new MyBeeThorax(this)
     this.beeThoraxVisibility = false
 
-    this.animatedBee = new MyAnimatedBee(this)
+    this.animatedBee = new MyAnimatedBee(this, [0, 3, 0])
 
     this.updatePeriod = 30;
     this.setUpdatePeriod(this.updatePeriod);
@@ -139,6 +140,7 @@ export class MyScene extends CGFscene {
     this.setShininess(10.0);
   }
 
+
   checkKeys(){
     var text = "Keys pressed: ";
     var keysPressed = false;
@@ -159,6 +161,7 @@ export class MyScene extends CGFscene {
 		for (let i = 0; i < this.animatedObjects.length; i++)
 			this.animatedObjects[i].update(timeSinceAppStart);
   }
+
   display() {
     // ---- BEGIN Background, camera and axis setup
     // Clear image and depth buffer everytime we update the scene
@@ -167,6 +170,23 @@ export class MyScene extends CGFscene {
     // Initialize Model-View matrix as identity (no transformation
     this.updateProjectionMatrix();
     this.loadIdentity();
+    let beePosition = this.animatedBee.position;
+
+    // first pos means offset in curr bee direction, second pos means offset in Y in relation to the bee
+    let [cameraOffsetDir, cameraOffsetY] = [-6, 2]
+
+    let [directionX, directionZ] = [Math.cos(this.animatedBee.direction), Math.sin(this.animatedBee.direction)]
+
+    let cameraPosition = [
+      beePosition[0]+directionX*cameraOffsetDir,
+      beePosition[1]+cameraOffsetY,
+      beePosition[2]+directionZ*cameraOffsetDir,
+    ]
+
+    this.camera.setPosition(cameraPosition);
+    this.camera.setTarget(beePosition);
+    this.myInterface.updateCameraAngle();
+
     // Apply transformations corresponding to the camera position relative to the origin
     this.applyViewMatrix();
 
@@ -183,6 +203,7 @@ export class MyScene extends CGFscene {
     if (this.beeThoraxVisibility) this.beeThorax.display()
     this.grass.display();
     
+    this.animatedBee.display()
     
    
     this.pushMatrix();
@@ -193,7 +214,6 @@ export class MyScene extends CGFscene {
     this.plane.display();
     this.popMatrix();
     // ---- END Primitive drawing section
-    this.translate(0,2,0);
-    this.animatedBee.display()
+
   }
 }
