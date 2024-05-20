@@ -1,12 +1,15 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFshader, CGFtexture } from "../lib/CGF.js";
 import { MyPanorama } from "./MyPanorama.js";
-import { MyPlane } from "./MyPlane.js";
-import { MySphere } from "./MySphere.js";
-import { MyRock } from "./MyRock.js";
-import { MyRockSet } from "./MyRockSet.js";
-import { MyRockPyramid } from "./MyRockPyramid.js";
+import { MyPlane } from "./primitives/MyPlane.js";
+import { MySphere } from "./primitives/MySphere.js";
+import { MyRock } from "./rock/MyRock.js";
+import { MyRockSet } from "./rock/MyRockSet.js";
+import { MyRockPyramid } from "./rock/MyRockPyramid.js";
+import { MyBee } from "./bee/MyBee.js";
+import { MyFlower } from "./flower/MyFlower.js";
+import { MyAnimatedBee } from "./animation/MyAnimatedBee.js";
+import { MyBeeThorax } from "./bee/MyBeeThorax.js";
 import { MyBigGrass } from "./MyBigGrass.js";
-import { MyFlower } from "./MyFlower.js";
 
 /**
  * MyScene
@@ -28,6 +31,8 @@ export class MyScene extends CGFscene {
     this.gl.clearDepth(100.0);
     this.gl.enable(this.gl.DEPTH_TEST);
     this.gl.enable(this.gl.CULL_FACE);
+    this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);
+    this.gl.enable(this.gl.BLEND);
     this.gl.depthFunc(this.gl.LEQUAL);
 
     
@@ -70,33 +75,47 @@ export class MyScene extends CGFscene {
     this.rock = new MyRock(this)
     this.rockPyramid = new MyRockPyramid(this, 10, 10)
     this.rockSet = new MyRockSet(this, 10, 10)
+    this.bee = new MyBee(this)
+    this.beeVisibility = false
+
     this.rockVisibility = false
     this.rockPyramidVisibility = false
     this.rockSetVisibility = false
 
     this.flower = new MyFlower(this, 5, 3, 0.04, this.stemAppearance, this.leafAppearance, 1.5, 8, Math.PI/4, Math.PI/4, 0, this.innerPetalAppearance, this.outerPetalAppearance, 0.5, this.receptacleAppearance)
-    this.flowerVisibility = true;
+    this.flowerVisibility = false;
+
+    this.beeThorax = new MyBeeThorax(this)
+    this.beeThoraxVisibility = false
+
+    this.animatedBee = new MyAnimatedBee(this)
+
+    this.updatePeriod = 30;
+    this.setUpdatePeriod(this.updatePeriod);
+    this.appStartTime = Date.now();
+    this.animatedObjects = [this.animatedBee]
+    this.animStartTimeSecs = 0;
+    this.startY = 0;
+
 
     //Objects connected to MyInterface
-    this.displayAxis = false;
+    this.displayAxis = true;
     this.scaleFactor = 1;
 
     this.enableTextures(true);
 
-//------ Applied Material
-this.quadMaterial = new CGFappearance(this);
-this.quadMaterial.loadTexture('images/earth.jpg');
-this.quadMaterial.setTextureWrap('REPEAT', 'REPEAT');
+    //------ Applied Material
+    this.quadMaterial = new CGFappearance(this);
+    this.quadMaterial.loadTexture('images/earth.jpg');
+    this.quadMaterial.setTextureWrap('REPEAT', 'REPEAT');
 
-this.texture = new CGFtexture(this, "images/terrain.jpg");
-this.appearance = new CGFappearance(this);
-this.appearance.setTexture(this.texture);
-this.appearance.setTextureWrap('REPEAT', 'REPEAT');
-
-
-
+    this.texture = new CGFtexture(this, "images/terrain.jpg");
+    this.appearance = new CGFappearance(this);
+    this.appearance.setTexture(this.texture);
+    this.appearance.setTextureWrap('REPEAT', 'REPEAT');
 
   }
+
   initLights() {
     this.setGlobalAmbientLight(0.6,0.6,0.6,1)
     this.lights[0].setPosition(15, 0, 5, 1);
@@ -119,7 +138,27 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     this.setSpecular(0.2, 0.4, 0.8, 1.0);
     this.setShininess(10.0);
   }
-  
+
+  checkKeys(){
+    var text = "Keys pressed: ";
+    var keysPressed = false;
+
+    if(this.gui.isKeyPressed("KeyW")){
+      text += " W ";
+      keysPressed = true;
+    }
+    if(this.gui.isKeyPressed("KeyS")){
+      text += " S ";
+      keysPressed = true;
+    }
+    if (keysPressed) console.log(text);
+  }
+
+  update(t){
+		let timeSinceAppStart = (t - this.appStartTime) / 1000.0;
+		for (let i = 0; i < this.animatedObjects.length; i++)
+			this.animatedObjects[i].update(timeSinceAppStart);
+  }
   display() {
     // ---- BEGIN Background, camera and axis setup
     // Clear image and depth buffer everytime we update the scene
@@ -140,9 +179,12 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     if(this.rockSetVisibility) this.rockSet.display()
     if(this.rockPyramidVisibility) this.rockPyramid.display()
     if(this.flowerVisibility) this.flower.display();
+    if (this.beeVisibility) this.bee.display()
+    if (this.beeThoraxVisibility) this.beeThorax.display()
     this.grass.display();
     
     
+   
     this.pushMatrix();
     this.appearance.apply();
     this.translate(0,-100,0);
@@ -151,5 +193,7 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     this.plane.display();
     this.popMatrix();
     // ---- END Primitive drawing section
+    this.translate(0,2,0);
+    this.animatedBee.display()
   }
 }

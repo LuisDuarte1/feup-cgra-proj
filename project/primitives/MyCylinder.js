@@ -30,7 +30,6 @@ export class MyCylinder extends CGFobject {
     }
 
     generateLateral(factor, stack_height, x_stack, z_stack) {
-
         for(let i = 0; i < this.slices + 1; i++){
             for (let j = 0; j < this.stacks + 1; j++){
                 let x = Math.cos(i * factor)
@@ -43,23 +42,20 @@ export class MyCylinder extends CGFobject {
 
         for (let i = 0; i < this.slices; i++){
             for (let j = 0; j < this.stacks; j++){
-                this.indices.push(
-                    i * (this.stacks + 1) + j, 
-                    i * (this.stacks + 1) + j + 1, 
-                    (i + 1) * (this.stacks + 1) + j, 
-                    i * (this.stacks + 1) + j + 1, 
-                    (i + 1) * (this.stacks + 1) + j + 1, 
-                    (i + 1) * (this.stacks + 1) + j
-                );
+                let a = (this.stacks + 1) * i + j
+                let b = a + 1
+                let c = (i + 1) * (this.stacks + 1) + j
+                let d = c + 1
+                this.indices.push(a, b, c, b, d, c)
             }
         }
     }
 
     generateTopAndBottom(factor, x_stack, z_stack, stack_height) {
-        stack_height += 1
+        stack_height = 1 + this.stacks
         this.vertices.push(0, 0, 0, this.top[0], this.top[1], this.top[2])
         this.normals.push(0, -1, 0, 0, 1, 0)
-        this.texCoords.push(0.5, 0.5, 0.5, 0.5)
+        this.texCoords.push(0.5, 0.5)
         
         const base = (this.slices + 1) * (this.stacks + 1)
 
@@ -68,7 +64,7 @@ export class MyCylinder extends CGFobject {
             let z = Math.sin(i * factor)
             this.vertices.push(x, 0, z, x + x_stack * this.z_offset, 1, z + this.z_offset * z_stack)
             this.normals.push(0, -1, 0, 0, 1, 0)
-            this.texCoords.push(0.5 + x / 2, 0.5 - z / 2, 0.5 + this.x_offset / 2, 0.5 - this.z_offset / 2)
+            this.texCoords.push(0.5, 0.5)
         }
 
         // top base
