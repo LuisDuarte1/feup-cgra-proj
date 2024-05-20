@@ -16,7 +16,7 @@ export class MyBigGrass extends CGFobject{
         const grassRadius = 50
         for(let i = radius; i > -radius; i -= grassRadius){
             for(let j = radius; j > -radius; j -= grassRadius){
-                const grassBlock = new MyGrass(scene, 50, 13000)
+                const grassBlock = new MyGrass(scene, 50, 10000)
                 this.grassBlocks.push(grassBlock)
                 this.grassBlockTransformations.push({translation: [i,0,j]})
             }

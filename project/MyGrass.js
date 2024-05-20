@@ -108,6 +108,7 @@ export class MyGrass extends CGFobject{
         this.vertices = []
         this.indices = []
         this.colors = []
+        this.normals = []
         for(let i = 0; i < this.bladeCount; i++){
             const x = Math.random() * this.radius;
             const z = Math.random() * this.radius;
