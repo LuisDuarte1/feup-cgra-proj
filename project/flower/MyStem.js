@@ -49,7 +49,7 @@ export class MyStem extends CGFobject {
             z += z_;
             this.disalignments.push([x_, 1, z_]);            
         }
-        let angles = [Math.PI/10];
+        let angles = [Math.PI/10, Math.PI/9, Math.PI/8, Math.PI/7, Math.PI/6];
         let randomAngle = angles[Math.floor(Math.random() * angles.length)];
         this.angle = randomAngle;
         let x_ = Math.cos(randomAngle);
@@ -57,7 +57,7 @@ export class MyStem extends CGFobject {
         x += x_;
         z += z_;
         this.disalignments.push([x_, 1, z_]);
-        this.finalPosition = [x * this.radius - 0.05, this.height + 0.1, z * this.radius]
+        this.finalPosition = [x * this.radius - 0.05, this.height, z * this.radius]
     }
 
     generateCylinders(numCylinders, slices, stacks){
