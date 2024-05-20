@@ -1,16 +1,12 @@
 import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFshader, CGFtexture } from "../lib/CGF.js";
 import { MyPanorama } from "./MyPanorama.js";
 import { MyPlane } from "./MyPlane.js";
-import { MyPetal } from "./MyPetal.js";
-import { MyStem } from "./MyStem.js";
 import { MySphere } from "./MySphere.js";
 import { MyRock } from "./MyRock.js";
 import { MyRockSet } from "./MyRockSet.js";
 import { MyRockPyramid } from "./MyRockPyramid.js";
-import { MyReceptacle } from "./MyReceptacle.js";
+import { MyBigGrass } from "./MyBigGrass.js";
 import { MyFlower } from "./MyFlower.js";
-import { MyCorolla } from "./MyCorolla.js";
-import { MyLeaf } from "./MyLeaf.js";
 
 /**
  * MyScene
@@ -40,6 +36,7 @@ export class MyScene extends CGFscene {
     this.plane = new MyPlane(this,30);
     this.sphere = new MySphere(this, 20, 20);
     this.sphereVisbility = false;
+    this.grass = new MyBigGrass(this);
 
 
     this.stemTex = new CGFtexture(this, "images/stem.png");
@@ -143,7 +140,8 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     if(this.rockSetVisibility) this.rockSet.display()
     if(this.rockPyramidVisibility) this.rockPyramid.display()
     if(this.flowerVisibility) this.flower.display();
-   
+    this.grass.display();
+    
     
     this.pushMatrix();
     this.appearance.apply();
