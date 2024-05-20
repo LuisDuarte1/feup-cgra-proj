@@ -14,6 +14,7 @@ export class MyStem extends CGFobject {
         this.leafColor = leafColor;
         this.leaf = new MyLeaf(scene, this.leafColor);
         this.flag = Math.round(Math.random());
+        this.currPosition = [0, 0, 0];
     
         this.generateHeights(this.numCylinders, this.height, this.maxHeight, this.minHeight);
         this.generateDisalignments(this.numCylinders);
@@ -38,24 +39,38 @@ export class MyStem extends CGFobject {
         let x = 0;
         let z = 0;
 
-        for (let i = 0; i < numCylinders; i++){
+        for (let i = 0; i < numCylinders - 1; i++){
             let randomAngle = Math.random() * 2 * Math.PI;
-            console.log(randomAngle);
             let x_ = Math.cos(randomAngle);
             let z_ = Math.sin(randomAngle);
             x_ = Math.round(x_ * 100) / 100;
             z_ = Math.round(z_ * 100) / 100;
             x += x_;
             z += z_;
-            this.disalignments.push([x_, 1, z_]);
+            this.disalignments.push([x_, 1, z_]);            
         }
+        let angles = [Math.PI/10];
+        let randomAngle = angles[Math.floor(Math.random() * angles.length)];
+        this.angle = randomAngle;
+        let x_ = Math.cos(randomAngle);
+        let z_ = Math.sin(randomAngle);
+        x += x_;
+        z += z_;
+        this.disalignments.push([x_, 1, z_]);
+        this.finalPosition = [x * this.radius - 0.05, this.height + 0.1, z * this.radius]
     }
 
     generateCylinders(numCylinders, slices, stacks){
         this.cylinders = [];
         for (let i = 0; i < numCylinders; i++){
-            let cylinder = new MyCylinder(this.scene, slices, stacks, this.disalignments[i]);
-            this.cylinders.push(cylinder);
+            if(i < numCylinders - 1){
+                let cylinder = new MyCylinder(this.scene, slices, stacks, this.disalignments[i]);
+                this.cylinders.push(cylinder);
+            }
+            else {
+                let cylinder = new MyCylinder(this.scene, slices, stacks, this.disalignments[i], true);
+                this.cylinders.push(cylinder);
+            }
         }
     }
 
@@ -70,8 +85,8 @@ export class MyStem extends CGFobject {
                 this.scene.pushMatrix();
                 this.scene.scale( 1 / this.radius * 0.6, 1 / this.radius * 0.02, 1 / this.radius * 0.8);
                 this.scene.translate(this.radius - 0.04, 0, 0)
-                if (i % 2) this.scene.rotate(Math.PI, 0, 1, 0)
-                this.flag = (this.flag + 1) % 2;
+                if (i % 2) this.scene.rotate(Math.PI/2, 0, 1, 0)
+                else this.scene.rotate(-Math.PI/2, 0, 1, 0)
                 this.scene.rotate(Math.PI/4, 1, 0, 0)
                 this.leafColor.apply();
                 this.leaf.display();

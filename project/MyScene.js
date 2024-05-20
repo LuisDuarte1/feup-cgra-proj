@@ -51,21 +51,25 @@ export class MyScene extends CGFscene {
 
     this.leafTex = new CGFtexture(this, "images/leaf.jpeg");
     this.leafAppearance = new CGFappearance(this);
+    this.leafAppearance.setAmbient(1, 1, 1, 1);
     this.leafAppearance.setTexture(this.leafTex);
     this.leafAppearance.setTextureWrap('REPEAT', 'REPEAT');
     
     this.innerPetalTex = new CGFtexture(this, "images/innerPetal.png");
     this.innerPetalAppearance = new CGFappearance(this);
+    this.innerPetalAppearance.setAmbient(1, 1, 1, 1);
     this.innerPetalAppearance.setTexture(this.innerPetalTex);
     this.innerPetalAppearance.setTextureWrap('REPEAT', 'REPEAT');
 
     this.outerPetalTex = new CGFtexture(this, "images/outerPetal.png");
     this.outerPetalAppearance = new CGFappearance(this);
+    this.outerPetalAppearance.setAmbient(1, 1, 1, 1);
     this.outerPetalAppearance.setTexture(this.outerPetalTex);
     this.outerPetalAppearance.setTextureWrap('REPEAT', 'REPEAT');
 
     this.receptacleTex = new CGFtexture(this, "images/receptacle.png");
     this.receptacleAppearance = new CGFappearance(this);
+    this.receptacleAppearance.setAmbient(1, 1, 1, 1);
     this.receptacleAppearance.setTexture(this.receptacleTex);
     this.receptacleAppearance.setTextureWrap('CLAMP_TO_EDGE', 'CLAMP_TO_EDGE');
 
@@ -82,13 +86,14 @@ export class MyScene extends CGFscene {
     this.rockPyramidVisibility = false
     this.rockSetVisibility = false
 
-    this.flower = new MyFlower(this, 5, 3, 0.04, this.stemAppearance, this.leafAppearance, 1.5, 8, Math.PI/4, Math.PI/4, 0, this.innerPetalAppearance, this.outerPetalAppearance, 0.5, this.receptacleAppearance)
-    this.flowerVisibility = false;
+    this.flower = new MyFlower(this, 5, 3, 0.06, this.stemAppearance, this.leafAppearance, 1.5, 8, Math.PI/4, Math.PI/4, 0, this.innerPetalAppearance, this.outerPetalAppearance, 0.5, this.receptacleAppearance)
+    this.flowerVisibility = true;
 
     this.beeThorax = new MyBeeThorax(this)
     this.beeThoraxVisibility = false
 
     this.animatedBee = new MyAnimatedBee(this)
+    this.animatedBeeVisibility = true
 
     this.updatePeriod = 30;
     this.setUpdatePeriod(this.updatePeriod);
@@ -194,6 +199,6 @@ export class MyScene extends CGFscene {
     this.popMatrix();
     // ---- END Primitive drawing section
     this.translate(0,2,0);
-    this.animatedBee.display()
+    if(this.animatedBeeVisibility) this.animatedBee.display()
   }
 }

@@ -16,13 +16,14 @@ export class MyFlower extends CGFobject {
     }
     display() {
         this.scene.pushMatrix()
-        this.scene.translate(0, this.height, 0)
+        this.scene.translate(...this.stem.finalPosition)
+        this.scene.rotate(-Math.PI/8, 1, 0, 0)
+        this.scene.rotate(-this.stem.angle, 1, 0, 0)
         this.scene.scale(0.6, 0.6, 0.6)
-        this.scene.rotate(-Math.PI/6, 1, 0, 0)
         this.corolla.display()
         this.scene.popMatrix()
         this.scene.pushMatrix()
-        this.scene.rotate(Math.PI/2, 0, 1, 0)
+        //this.scene.rotate(Math.PI/2, 0, 1, 0)
         this.stem.display()
         this.scene.popMatrix()
     }
