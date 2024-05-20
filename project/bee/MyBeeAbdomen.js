@@ -15,7 +15,7 @@ export class MyBeeAbdomen extends CGFobject {
     }
     display(){
         this.scene.pushMatrix();
-        this.scene.scale(0.5,1,0.5);
+        this.scene.scale(0.4,0.7,0.4);
         this.abdomenTex.apply();
         this.sphere.display();
         this.scene.popMatrix();

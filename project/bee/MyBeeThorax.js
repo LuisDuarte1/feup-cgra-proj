@@ -5,13 +5,14 @@ import { MyBeeWing } from './MyBeeWing.js';
 import { setColorRGB } from "../utils.js";
 
 export class MyBeeThorax extends CGFobject {
-    constructor(scene) {
+    constructor(scene, frontWingAngle, backWingAngle) {
         super(scene);
         this.sphere = new MySphere(scene, 40, 10, false, 0.8, 0.8, false);
         this.frontLegs = new MyBeeLegs(scene, Math.PI/6);
         this.middleLegs = new MyBeeLegs(scene, Math.PI/8);
         this.backLegs = new MyBeeLegs(scene, Math.PI/6, true);
-        this.wing = new MyBeeWing(scene);
+        this.frontWing = new MyBeeWing(scene, frontWingAngle);
+        this.backWing = new MyBeeWing(scene, backWingAngle);
         this.initMaterials();
     }
 
@@ -91,29 +92,28 @@ export class MyBeeThorax extends CGFobject {
         // wings
 
         this.scene.pushMatrix();
-        this.scene.rotate(-Math.PI/9, 1, 0, 0);
-        this.scene.translate(-0.15, 0, 0.7);
-        this.wing.display();
+        this.scene.translate(-0.14, 0.15, 0.16);
+        this.frontWing.display();
         this.scene.popMatrix();
 
         this.scene.pushMatrix();
-        this.scene.rotate(Math.PI/9, 1, 0, 0);
-        this.scene.translate(-0.15, 0, -0.7);
-        this.wing.display();
+        this.scene.translate(-0.14, 0.15, -0.16);
+        this.scene.rotate(Math.PI, 0, 1, 0);
+        this.frontWing.display();
         this.scene.popMatrix();
 
         this.scene.pushMatrix();
-        this.scene.rotate(-10 * Math.PI/180, 1, 0, 0);
-        this.scene.translate(0.15, 0, 0.55);
+        this.scene.translate(0.14, 0.11, 0.15);
         this.scene.scale(0.8, 0.8, 0.8)
-        this.wing.display();
+        this.backWing.display();
         this.scene.popMatrix();
 
         this.scene.pushMatrix();
-        this.scene.rotate(10 * Math.PI/180, 1, 0, 0);
-        this.scene.translate(0.15, 0, -0.55);
+        this.scene.translate(0.14, 0.11, -0.15);
         this.scene.scale(0.8, 0.8, 0.8)
-        this.wing.display();
+        this.scene.rotate(Math.PI, 0, 1, 0);
+        this.backWing.display();
+        this.scene.popMatrix();
 
     }
 }

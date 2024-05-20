@@ -7,12 +7,9 @@ import { MyRockSet } from "./rock/MyRockSet.js";
 import { MyRockPyramid } from "./rock/MyRockPyramid.js";
 import { MyBee } from "./bee/MyBee.js";
 import { MyFlower } from "./flower/MyFlower.js";
-import { MyBeeHead } from "./bee/MyBeeHead.js";
-import { MyBeeAntennae } from "./bee/MyBeeAntennae.js";
+import { MyAnimatedBee } from "./animation/MyAnimatedBee.js";
 import { MyBeeThorax } from "./bee/MyBeeThorax.js";
-import { MyBeeLegs } from "./bee/MyBeeLegs.js";
 import { MyBeeWing } from "./bee/MyBeeWing.js";
-
 /**
  * MyScene
  * @constructor
@@ -77,30 +74,27 @@ export class MyScene extends CGFscene {
     this.rockPyramid = new MyRockPyramid(this, 10, 10)
     this.rockSet = new MyRockSet(this, 10, 10)
     this.bee = new MyBee(this)
-    this.beeVisibility = true
+    this.beeVisibility = false
 
     this.rockVisibility = false
     this.rockPyramidVisibility = false
     this.rockSetVisibility = false
 
-
-    this.beeHead = new MyBeeHead(this)
-    this.beeHeadVisibility = false
-
-    this.MyBeeAntennae = new MyBeeAntennae(this)
-    this.beeAntennaeVisibility = false
-
-    this.MyBeeThorax = new MyBeeThorax(this)
-    this.beeThoraxVisibility = false
-
-    this.MyBeeLegs = new MyBeeLegs(this, Math.PI/6)
-    this.beeLegsVisibility = false
-
     this.flower = new MyFlower(this, 5, 3, 0.04, this.stemAppearance, this.leafAppearance, 1.5, 8, Math.PI/4, Math.PI/4, 0, this.innerPetalAppearance, this.outerPetalAppearance, 0.5, this.receptacleAppearance)
     this.flowerVisibility = false;
 
-    this.wing = new MyBeeWing(this)
-    this.wingVisibility = false;
+    this.beeThorax = new MyBeeThorax(this)
+    this.beeThoraxVisibility = false
+
+    this.animatedBee = new MyAnimatedBee(this)
+
+    this.updatePeriod = 30;
+    this.setUpdatePeriod(this.updatePeriod);
+    this.appStartTime = Date.now();
+    this.animatedObjects = [this.animatedBee]
+    this.animStartTimeSecs = 0;
+    this.startY = 0;
+
 
     //Objects connected to MyInterface
     this.displayAxis = true;
@@ -108,20 +102,18 @@ export class MyScene extends CGFscene {
 
     this.enableTextures(true);
 
-//------ Applied Material
-this.quadMaterial = new CGFappearance(this);
-this.quadMaterial.loadTexture('images/earth.jpg');
-this.quadMaterial.setTextureWrap('REPEAT', 'REPEAT');
+    //------ Applied Material
+    this.quadMaterial = new CGFappearance(this);
+    this.quadMaterial.loadTexture('images/earth.jpg');
+    this.quadMaterial.setTextureWrap('REPEAT', 'REPEAT');
 
-this.texture = new CGFtexture(this, "images/terrain.jpg");
-this.appearance = new CGFappearance(this);
-this.appearance.setTexture(this.texture);
-this.appearance.setTextureWrap('REPEAT', 'REPEAT');
-
-
-
+    this.texture = new CGFtexture(this, "images/terrain.jpg");
+    this.appearance = new CGFappearance(this);
+    this.appearance.setTexture(this.texture);
+    this.appearance.setTextureWrap('REPEAT', 'REPEAT');
 
   }
+
   initLights() {
     this.setGlobalAmbientLight(0.6,0.6,0.6,1)
     this.lights[0].setPosition(15, 0, 5, 1);
@@ -144,7 +136,27 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     this.setSpecular(0.2, 0.4, 0.8, 1.0);
     this.setShininess(10.0);
   }
-  
+
+  checkKeys(){
+    var text = "Keys pressed: ";
+    var keysPressed = false;
+
+    if(this.gui.isKeyPressed("KeyW")){
+      text += " W ";
+      keysPressed = true;
+    }
+    if(this.gui.isKeyPressed("KeyS")){
+      text += " S ";
+      keysPressed = true;
+    }
+    if (keysPressed) console.log(text);
+  }
+
+  update(t){
+		let timeSinceAppStart = (t - this.appStartTime) / 1000.0;
+		for (let i = 0; i < this.animatedObjects.length; i++)
+			this.animatedObjects[i].update(timeSinceAppStart);
+  }
   display() {
     // ---- BEGIN Background, camera and axis setup
     // Clear image and depth buffer everytime we update the scene
@@ -165,12 +177,9 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     if(this.rockSetVisibility) this.rockSet.display()
     if(this.rockPyramidVisibility) this.rockPyramid.display()
     if(this.flowerVisibility) this.flower.display();
-    if(this.beeHeadVisibility) this.beeHead.display()
-    if(this.beeAntennaeVisibility) this.MyBeeAntennae.display()
-    if(this.beeThoraxVisibility) this.MyBeeThorax.display()
-    if(this.beeLegsVisibility) this.MyBeeLegs.display()
     if (this.beeVisibility) this.bee.display()
-    if (this.wingVisibility) this.wing.display()
+    if (this.beeThoraxVisibility) this.beeThorax.display()
+    
    
     this.pushMatrix();
     this.appearance.apply();
@@ -180,5 +189,7 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     this.plane.display();
     this.popMatrix();
     // ---- END Primitive drawing section
+    this.translate(0,2,0);
+    this.animatedBee.display()
   }
 }
