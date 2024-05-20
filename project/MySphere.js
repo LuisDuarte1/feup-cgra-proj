@@ -11,6 +11,7 @@ export class MySphere extends CGFobject{
      */
     constructor(scene, slices, stacks, invertNormals=false, verticalRadius=1, horizontalRadius=1) {
 		super(scene);
+        this.verticalRadius = verticalRadius
 		this.initBuffers(slices, stacks, invertNormals,verticalRadius,horizontalRadius);
 	}
 

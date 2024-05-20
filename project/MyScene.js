@@ -6,6 +6,7 @@ import { MyRock } from "./MyRock.js";
 import { MyRockSet } from "./MyRockSet.js";
 import { MyRockPyramid } from "./MyRockPyramid.js";
 import { MyBigGrass } from "./MyBigGrass.js";
+import { MyFlower } from "./MyFlower.js";
 
 /**
  * MyScene
@@ -29,13 +30,39 @@ export class MyScene extends CGFscene {
     this.gl.enable(this.gl.CULL_FACE);
     this.gl.depthFunc(this.gl.LEQUAL);
 
+    
     //Initialize scene objects
     this.axis = new CGFaxis(this);
     this.plane = new MyPlane(this,30);
-
     this.sphere = new MySphere(this, 20, 20);
     this.sphereVisbility = false;
     this.grass = new MyBigGrass(this);
+
+
+    this.stemTex = new CGFtexture(this, "images/stem.png");
+    this.stemAppearance = new CGFappearance(this);
+    this.stemAppearance.setTexture(this.stemTex);
+    this.stemAppearance.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.leafTex = new CGFtexture(this, "images/leaf.jpeg");
+    this.leafAppearance = new CGFappearance(this);
+    this.leafAppearance.setTexture(this.leafTex);
+    this.leafAppearance.setTextureWrap('REPEAT', 'REPEAT');
+    
+    this.innerPetalTex = new CGFtexture(this, "images/innerPetal.png");
+    this.innerPetalAppearance = new CGFappearance(this);
+    this.innerPetalAppearance.setTexture(this.innerPetalTex);
+    this.innerPetalAppearance.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.outerPetalTex = new CGFtexture(this, "images/outerPetal.png");
+    this.outerPetalAppearance = new CGFappearance(this);
+    this.outerPetalAppearance.setTexture(this.outerPetalTex);
+    this.outerPetalAppearance.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.receptacleTex = new CGFtexture(this, "images/receptacle.png");
+    this.receptacleAppearance = new CGFappearance(this);
+    this.receptacleAppearance.setTexture(this.receptacleTex);
+    this.receptacleAppearance.setTextureWrap('CLAMP_TO_EDGE', 'CLAMP_TO_EDGE');
 
     this.panoramaTexture = new CGFtexture(this, 'images/panorama.jpg')
     this.panorama = new MyPanorama(this, this.panoramaTexture)
@@ -46,6 +73,9 @@ export class MyScene extends CGFscene {
     this.rockVisibility = false
     this.rockPyramidVisibility = false
     this.rockSetVisibility = false
+
+    this.flower = new MyFlower(this, 5, 3, 0.04, this.stemAppearance, this.leafAppearance, 1.5, 8, Math.PI/4, Math.PI/4, 0, this.innerPetalAppearance, this.outerPetalAppearance, 0.5, this.receptacleAppearance)
+    this.flowerVisibility = true;
 
     //Objects connected to MyInterface
     this.displayAxis = false;
@@ -63,6 +93,9 @@ this.appearance = new CGFappearance(this);
 this.appearance.setTexture(this.texture);
 this.appearance.setTextureWrap('REPEAT', 'REPEAT');
 
+
+
+
   }
   initLights() {
     this.setGlobalAmbientLight(0.6,0.6,0.6,1)
@@ -76,7 +109,7 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
       1.0,
       0.1,
       1000,
-      vec3.fromValues(50, 5, 15),
+      vec3.fromValues(5, 5, 5),
       vec3.fromValues(0, 0, 0)
     );
   }
@@ -86,6 +119,7 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     this.setSpecular(0.2, 0.4, 0.8, 1.0);
     this.setShininess(10.0);
   }
+  
   display() {
     // ---- BEGIN Background, camera and axis setup
     // Clear image and depth buffer everytime we update the scene
@@ -105,7 +139,10 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     if(this.rockVisibility) this.rock.display()
     if(this.rockSetVisibility) this.rockSet.display()
     if(this.rockPyramidVisibility) this.rockPyramid.display()
+    if(this.flowerVisibility) this.flower.display();
     this.grass.display();
+    
+    
     this.pushMatrix();
     this.appearance.apply();
     this.translate(0,-100,0);
@@ -113,7 +150,6 @@ this.appearance.setTextureWrap('REPEAT', 'REPEAT');
     this.rotate(-Math.PI/2.0,1,0,0);
     this.plane.display();
     this.popMatrix();
-
     // ---- END Primitive drawing section
   }
 }
