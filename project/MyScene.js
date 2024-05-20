@@ -1,4 +1,4 @@
-import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFshader, CGFtexture } from "../lib/CGF.js";
+import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFshader, CGFtexture, CGFinterface } from "../lib/CGF.js";
 import { MyPanorama } from "./MyPanorama.js";
 import { MyPlane } from "./primitives/MyPlane.js";
 import { MySphere } from "./primitives/MySphere.js";
@@ -16,6 +16,11 @@ import { MyBigGrass } from "./MyBigGrass.js";
  * @constructor
  */
 export class MyScene extends CGFscene {
+
+  /**
+   * 
+   * @param {CGFinterface} myInterface 
+   */
   constructor(myInterface) {
     super();
     this.myInterface = myInterface;
@@ -140,21 +145,6 @@ export class MyScene extends CGFscene {
     this.setShininess(10.0);
   }
 
-
-  checkKeys(){
-    var text = "Keys pressed: ";
-    var keysPressed = false;
-
-    if(this.gui.isKeyPressed("KeyW")){
-      text += " W ";
-      keysPressed = true;
-    }
-    if(this.gui.isKeyPressed("KeyS")){
-      text += " S ";
-      keysPressed = true;
-    }
-    if (keysPressed) console.log(text);
-  }
 
   update(t){
 		let timeSinceAppStart = (t - this.appStartTime) / 1000.0;
