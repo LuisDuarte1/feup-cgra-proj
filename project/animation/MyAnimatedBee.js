@@ -3,8 +3,11 @@ import { MyBee } from "../bee/MyBee.js";
 
 const DIRECTION_CHANGE = Math.PI / 6;
 const XZ_ACCELERATION = 1;
-const MAX_VELOCITY = 5;
+const MAX_VELOCITY = 6;
 const DRAG = 2.5;
+const GRAVITY = 2;
+const MAX_Y_VELOCITY = 2;
+const Y_ACCELERATION = 0.5;
 
 export class MyAnimatedBee extends MyAnimatedObject{
 
@@ -15,6 +18,7 @@ export class MyAnimatedBee extends MyAnimatedObject{
         this.position = position;
         this.direction = Math.PI;
         this.velocityXZ = 0;
+        this.velocityY = 0;
     }
 
     tween(x)
@@ -40,6 +44,7 @@ export class MyAnimatedBee extends MyAnimatedObject{
     checkKeys(timeSinceAppStart){
         const deltaTime = timeSinceAppStart - this.lastFrame;
         let velocityChange = false;
+        let verticalVelocityChange = false;
         if(this.scene.myInterface.isKeyPressed("KeyW")){
             this.velocityXZ = Math.min(MAX_VELOCITY, 
                 this.velocityXZ+XZ_ACCELERATION*deltaTime);
@@ -57,6 +62,12 @@ export class MyAnimatedBee extends MyAnimatedObject{
             velocityChange = true;
         }
 
+        if(this.scene.myInterface.isKeyPressed("Space")){
+            this.velocityY = Math.max(MAX_Y_VELOCITY, 
+                this.velocityY+Y_ACCELERATION*deltaTime);
+            verticalVelocityChange = true;
+        }
+
         if(!velocityChange){
             if(this.velocityXZ > 0){
                 this.velocityXZ = Math.max(0, this.velocityXZ-DRAG*deltaTime)
@@ -67,10 +78,14 @@ export class MyAnimatedBee extends MyAnimatedObject{
             }
         }
 
+        if(!verticalVelocityChange){
+            this.velocityY -= GRAVITY*deltaTime
+        }
+
         //apply velocity changes
         this.position = [
             this.position[0] + Math.cos(this.direction)*this.velocityXZ*deltaTime, 
-            this.position[1],
+            Math.min(Math.max(0.6, this.position[1] + this.velocityY*deltaTime), 25),
             this.position[2] + Math.sin(this.direction)*this.velocityXZ*deltaTime,
         ]
       }

@@ -191,15 +191,17 @@ export class MyScene extends CGFscene {
     if(this.flowerVisibility) this.flower.display();
     if (this.beeVisibility) this.bee.display()
     if (this.beeThoraxVisibility) this.beeThorax.display()
-    this.grass.display();
     
     this.animatedBee.display()
     
-   
+    this.pushMatrix();
+    this.translate(-50, 0, -50)
+    this.grass.display();
+    this.popMatrix();
+
     this.pushMatrix();
     this.appearance.apply();
-    this.translate(0,-100,0);
-    this.scale(400,400,400);
+    this.scale(400,1,400);
     this.rotate(-Math.PI/2.0,1,0,0);
     this.plane.display();
     this.popMatrix();
