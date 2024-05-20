@@ -9,7 +9,8 @@ import { MyBee } from "./bee/MyBee.js";
 import { MyFlower } from "./flower/MyFlower.js";
 import { MyAnimatedBee } from "./animation/MyAnimatedBee.js";
 import { MyBeeThorax } from "./bee/MyBeeThorax.js";
-import { MyBeeWing } from "./bee/MyBeeWing.js";
+import { MyBigGrass } from "./MyBigGrass.js";
+
 /**
  * MyScene
  * @constructor
@@ -40,6 +41,7 @@ export class MyScene extends CGFscene {
     this.plane = new MyPlane(this,30);
     this.sphere = new MySphere(this, 20, 20);
     this.sphereVisbility = false;
+    this.grass = new MyBigGrass(this);
 
 
     this.stemTex = new CGFtexture(this, "images/stem.png");
@@ -179,6 +181,8 @@ export class MyScene extends CGFscene {
     if(this.flowerVisibility) this.flower.display();
     if (this.beeVisibility) this.bee.display()
     if (this.beeThoraxVisibility) this.beeThorax.display()
+    this.grass.display();
+    
     
    
     this.pushMatrix();
