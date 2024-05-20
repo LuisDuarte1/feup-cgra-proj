@@ -15,6 +15,8 @@ export class MyBeeWing extends CGFobject {
         this.wingTex.setDiffuse(1, 1, 1, 0);
         this.wingTex.setSpecular(1, 1, 1, 0);
         this.wingTex.setEmission(0.1, 0.1, 0.1, 0.1);
+        this.wingTex.loadTexture('images/beeWing.avif');
+        this.wingTex.setTextureWrap('REPEAT', 'REPEAT');
     }
     
     display(){

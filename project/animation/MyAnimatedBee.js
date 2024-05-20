@@ -35,8 +35,8 @@ export class MyAnimatedBee extends MyAnimatedObject{
     }
     wingAnim(elapsedTimeSecs){
         if(elapsedTimeSecs >= 0 && elapsedTimeSecs <= this.duration){
-            this.object.thorax.frontWing.wingAngle = this.sinFunction(elapsedTimeSecs, 0.2,5.3);
-            this.object.thorax.backWing.wingAngle = this.sinFunction(elapsedTimeSecs, 0.2,-5.3);
+            this.object.thorax.frontWing.wingAngle = this.sinFunction(elapsedTimeSecs, 0.2,6);
+            this.object.thorax.backWing.wingAngle = this.sinFunction(elapsedTimeSecs, 0.2,-6.3);
         }
     }
 
