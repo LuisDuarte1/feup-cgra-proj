@@ -20,6 +20,8 @@ export class MyScene extends CGFscene {
   }
   init(application) {
     super.init(application);
+
+    this.globalFlowerList = [];
     
     this.initCameras();
     this.initLights();

@@ -2,7 +2,7 @@ import { CGFobject, CGFappearance } from '../../../lib/CGF.js';
 import { MyFlower } from './MyFlower.js';
 
 export class MyGarden extends CGFobject {
-    constructor(scene, nRows, nCols, flowerAppearances, stemAppearances, leafAppearances, receptacleAppearances) {
+    constructor(scene, nRows, nCols, flowerAppearances, stemAppearances, leafAppearances, receptacleAppearances, basePosition=[0,0,0]) {
         super(scene);
         this.nRows = nRows;
         this.nCols = nCols;
@@ -10,6 +10,7 @@ export class MyGarden extends CGFobject {
         this.stemAppearances = stemAppearances;
         this.leafAppearances = leafAppearances;
         this.receptacleAppearances = receptacleAppearances;
+        this.basePosition = basePosition;
         this.initGarden();
     }
     initGarden(){
@@ -38,10 +39,14 @@ export class MyGarden extends CGFobject {
                 let leafAppearance = this.leafAppearances[leafIndex];
                 let receptacleAppearance = this.receptacleAppearances[receptacleIndex];
 
-                let flower = new MyFlower(this.scene, numCylinders, height, radius, stemAppearance, leafAppearance, corollaRadius, numPetals, petalAngle, maxAngle, minAngle, innerPetalColor, outerPetalColor, receptacleRadius, receptacleAppearance);
-                this.flowers[i].push(flower);
                 let x = (i * 4) + Math.random() * 3;
                 let z = (j * 4) + Math.random() * 3;
+
+                let flower = new MyFlower(this.scene, numCylinders, height, radius, 
+                    stemAppearance, leafAppearance, corollaRadius, numPetals, petalAngle, maxAngle, 
+                    minAngle, innerPetalColor, outerPetalColor, receptacleRadius, receptacleAppearance, 
+                    Math.random()*2*Math.PI, [this.basePosition[0]+x,this.basePosition[1],this.basePosition[2]+z]);
+                this.flowers[i].push(flower);
                 this.flowerPositions.push({x: x, z: z});
             }
         }
