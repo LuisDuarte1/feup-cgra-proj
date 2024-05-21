@@ -1,4 +1,4 @@
-import {CGFinterface, dat} from '../lib/CGF.js';
+import {CGFinterface, dat, CGFcameraAxisID} from '../lib/CGF.js';
 
 /**
 * MyInterface
@@ -29,6 +29,9 @@ export class MyInterface extends CGFinterface {
         this.gui.add(this.scene, 'rockSetVisibility').name('RockSet')
         this.gui.add(this.scene, 'rockPyramidVisibility').name('Rock Pyramid')
 
+
+        this.cameraAngle = [0, 0];
+        this.cameraZoom = 0;
         this.initKeys();
         return true;
     }
@@ -49,5 +52,45 @@ export class MyInterface extends CGFinterface {
     }
     isKeyReleased(keyCode) {
         return !this.activeKeys[keyCode] || false;
+    }
+
+    processMouse(){
+        if (this.activeCamera) {
+			var displacement = vec2.subtract(vec2.create(), this.mouse, this.prevMouse);
+ 
+			if (this.mouseButtons[0]) { // pressing Left
+				if(this.altKey) { // alternative rotation, centered on camera position. might be buggy
+					this.activeCamera.rotate(this.activeCamera.getRight(), -displacement[1] * Math.PI / 180.0);
+					this.activeCamera.rotate(vec3.fromValues(0, 1, 0), -displacement[0] * Math.PI / 180.0);
+				}
+				else if (this.ctrlKey) { // same as pressing middle
+					this.cameraZoom += displacement[1] * 0.05
+                    this.cameraZoom = Math.min(this.cameraZoom, 4.5)
+                    this.cameraZoom = Math.max(this.cameraZoom, -3)
+                    this.activeCamera.zoom(this.cameraZoom);
+				}
+				else {
+                    this.cameraAngle[0] += displacement[1] * Math.PI / 180.0;
+                    this.cameraAngle[1] += -displacement[0] * Math.PI / 180.0;
+					this.updateCameraAngle();
+				}
+			} else if (this.mouseButtons[2]) { // pressing Right
+				this.activeCamera.pan([-displacement[0] * 0.05, displacement[1] * 0.05, 0]);
+			}
+		}
+    }
+
+    processWheel(event){
+        if(this.activeCamera)
+            this.cameraZoom += -event.deltaY * 0.005
+            this.cameraZoom = Math.min(this.cameraZoom, 4.5)
+            this.cameraZoom = Math.max(this.cameraZoom, -3)
+            this.activeCamera.zoom(this.cameraZoom);
+    }
+
+    updateCameraAngle() {
+        this.activeCamera.orbit(CGFcameraAxisID.X, this.cameraAngle[0]);
+        this.activeCamera.orbit(CGFcameraAxisID.Y, this.cameraAngle[1]);
+        this.activeCamera.zoom(this.cameraZoom);
     }
 }

@@ -10,7 +10,7 @@ import {CGFobject} from '../../lib/CGF.js';
  * @param maxT - maximum texture coordinate in T
 */
 export class MyPlane extends CGFobject {
-	constructor(scene, nrDivs, minS, maxS, minT, maxT) {
+	constructor(scene, nrDivs, minS, maxS, minT, maxT, repeat=true) {
 		super(scene);
 		// nrDivs = 1 if not provided
 		nrDivs = typeof nrDivs !== 'undefined' ? nrDivs : 1;
@@ -22,6 +22,7 @@ export class MyPlane extends CGFobject {
 		this.maxT = maxT || 1;
 		this.q = (this.maxS - this.minS) / this.nrDivs;
 		this.w = (this.maxT - this.minT) / this.nrDivs;
+		this.repeat = repeat;
 		this.initBuffers();
 	}
 	initBuffers() {
@@ -35,7 +36,10 @@ export class MyPlane extends CGFobject {
 			for (var i = 0; i <= this.nrDivs; i++) {
 				this.vertices.push(xCoord, yCoord, 0);
 				this.normals.push(0, 0, 1);
-				this.texCoords.push(this.minS + i * this.q, this.minT + j * this.w);
+				if(!this.repeat) 
+					this.texCoords.push(this.minS + i * this.q, this.minT + j * this.w);
+				else
+					this.texCoords.push(i % 2 == 0 ? 0 : 1, j % 2 == 0 ? 0 : 1);
 				xCoord += this.patchLength;
 			}
 			yCoord -= this.patchLength;
