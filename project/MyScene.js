@@ -107,6 +107,7 @@ export class MyScene extends CGFscene {
     //Objects connected to MyInterface
     this.displayAxis = true;
     this.scaleFactor = 1;
+    this.speedFactor = 1;
 
     this.enableTextures(true);
 
@@ -148,6 +149,8 @@ export class MyScene extends CGFscene {
 
   update(t){
 		let timeSinceAppStart = (t - this.appStartTime) / 1000.0;
+    this.animatedBee.speedFactor = this.speedFactor;
+    this.animatedBee.scaleFactor = this.scaleFactor;
 		for (let i = 0; i < this.animatedObjects.length; i++)
 			this.animatedObjects[i].update(timeSinceAppStart);
   }

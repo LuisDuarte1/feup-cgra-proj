@@ -16,9 +16,12 @@ export class MyAnimatedBee extends MyAnimatedObject{
         let bee = new MyBee(scene);
         super(scene, bee);
         this.position = position;
+        this.initialPosition = position;
         this.direction = Math.PI;
         this.velocityXZ = 0;
         this.velocityY = 0;
+        this.speedFactor = 1;
+        this.scaleFactor = 1;
     }
 
     tween(x)
@@ -46,40 +49,49 @@ export class MyAnimatedBee extends MyAnimatedObject{
         let velocityChange = false;
         let verticalVelocityChange = false;
         if(this.scene.myInterface.isKeyPressed("KeyW")){
-            this.velocityXZ = Math.min(MAX_VELOCITY, 
-                this.velocityXZ+XZ_ACCELERATION*deltaTime);
+            this.velocityXZ = Math.min(MAX_VELOCITY*this.speedFactor, 
+                this.velocityXZ+XZ_ACCELERATION*this.speedFactor*deltaTime);
             velocityChange = true;
         }
         if(this.scene.myInterface.isKeyPressed("KeyA")){
-            this.direction -= DIRECTION_CHANGE*deltaTime;
+            this.direction -= DIRECTION_CHANGE*this.speedFactor*deltaTime;
         }
         if(this.scene.myInterface.isKeyPressed("KeyD")){
-            this.direction += DIRECTION_CHANGE*deltaTime;
+            this.direction += DIRECTION_CHANGE*this.speedFactor*deltaTime;
         }
         if(this.scene.myInterface.isKeyPressed("KeyS")){
-            this.velocityXZ = Math.max(-MAX_VELOCITY, 
-                this.velocityXZ-XZ_ACCELERATION*deltaTime);
+            this.velocityXZ = Math.max(-MAX_VELOCITY*this.speedFactor, 
+                this.velocityXZ-XZ_ACCELERATION*this.speedFactor*deltaTime);
             velocityChange = true;
         }
 
         if(this.scene.myInterface.isKeyPressed("Space")){
-            this.velocityY = Math.max(MAX_Y_VELOCITY, 
-                this.velocityY+Y_ACCELERATION*deltaTime);
+            this.velocityY = Math.max(MAX_Y_VELOCITY*this.speedFactor, 
+                this.velocityY+Y_ACCELERATION*this.speedFactor*deltaTime);
             verticalVelocityChange = true;
+        }
+
+        if(this.scene.myInterface.isKeyPressed("KeyR")){
+            this.velocityY = 0;
+            this.velocityXZ = 0;
+            this.direction = Math.PI;
+            this.position = this.initialPosition;
+            verticalVelocityChange = false;
+            velocityChange = false;
         }
 
         if(!velocityChange){
             if(this.velocityXZ > 0){
-                this.velocityXZ = Math.max(0, this.velocityXZ-DRAG*deltaTime)
+                this.velocityXZ = Math.max(0, this.velocityXZ-DRAG*this.speedFactor*deltaTime)
             }
             else if(this.velocityXZ < 0){
-                this.velocityXZ = Math.min(0, this.velocityXZ+DRAG*deltaTime)
+                this.velocityXZ = Math.min(0, this.velocityXZ+DRAG*this.speedFactor*deltaTime)
 
             }
         }
 
         if(!verticalVelocityChange){
-            this.velocityY -= GRAVITY*deltaTime
+            this.velocityY -= GRAVITY*this.speedFactor*deltaTime
         }
 
         //apply velocity changes
@@ -113,7 +125,8 @@ export class MyAnimatedBee extends MyAnimatedObject{
         this.scene.pushMatrix();
         this.scene.translate(...this.position);
         this.scene.translate(0,this.animPosition,0);
-        this.scene.rotate(Math.PI - this.direction, 0, 1, 0)
+        this.scene.rotate(Math.PI - this.direction, 0, 1, 0);
+        this.scene.scale(this.scaleFactor, this.scaleFactor, this.scaleFactor);
         super.display();
         this.scene.popMatrix();
     }
