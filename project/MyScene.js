@@ -192,7 +192,6 @@ export class MyScene extends CGFscene {
     if (this.beeVisibility) this.bee.display()
     if (this.beeThoraxVisibility) this.beeThorax.display()
     
-    this.animatedBee.display()
     
     this.pushMatrix();
     this.translate(-50, 0, -50)
@@ -205,6 +204,8 @@ export class MyScene extends CGFscene {
     this.rotate(-Math.PI/2.0,1,0,0);
     this.plane.display();
     this.popMatrix();
+
+    this.animatedBee.display()
     // ---- END Primitive drawing section
 
   }
