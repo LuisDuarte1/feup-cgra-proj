@@ -5,7 +5,15 @@ import { MyRock } from "./MyRock.js";
  * @property {CGFscene} scene
  */
 export class MyRockPyramid extends CGFobject{
-    
+    /**
+     * Builds a column of rocks at the given x and z coordinates.
+     * The column is built up to the given minimum height.
+     * Each rock is randomly rotated around the y-axis.
+     *
+     * @param {number} x - The x coordinate of the column.
+     * @param {number} z - The z coordinate of the column.
+     * @param {number} min_height - The minimum height of the column.
+     */
     buildColumn(x,z,min_height){
         let curr_height = 0
         for(let i = 0; i < (min_height == 3 && this.maxHeight > 3? this.maxHeight : min_height); i++){
@@ -22,7 +30,9 @@ export class MyRockPyramid extends CGFobject{
         }
         this.maxHeight = Math.max(curr_height, this.maxHeight)
     }
-
+    /**
+     * Builds the rocks for the pyramid.
+     */
     buildRocks(){
         this.buildColumn(0,0,4)
 
@@ -36,7 +46,10 @@ export class MyRockPyramid extends CGFobject{
         this.buildColumn(1,  1, 2)
         this.buildColumn(1, -1, 2)
     }
-
+    /**
+     * Constructs a new rock pyramid object.
+     * @param {*} scene 
+     */
     constructor(scene){
         super(scene)
         this.rocks = []

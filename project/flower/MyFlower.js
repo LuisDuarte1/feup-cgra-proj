@@ -4,6 +4,26 @@ import { MyCorolla } from './MyCorolla.js';
 import { MyPolen } from './MyPolen.js';
 
 export class MyFlower extends CGFobject {
+    /**
+     * 
+     * @param {*} scene 
+     * @param {*} numCylinders 
+     * @param {*} height 
+     * @param {*} radius 
+     * @param {*} stemAppearance 
+     * @param {*} leafAppearance 
+     * @param {*} corollaRadius 
+     * @param {*} numPetals 
+     * @param {*} petalAngle 
+     * @param {*} maxAngle 
+     * @param {*} minAngle 
+     * @param {*} innerPetalColor 
+     * @param {*} outerPetalColor 
+     * @param {*} receptacleRadius 
+     * @param {*} receptacleColor 
+     * @param {*} YYRotation 
+     * @param {*} basePosition 
+     */
     constructor(scene, numCylinders, height, radius, stemAppearance, leafAppearance, corollaRadius, 
             numPetals, petalAngle, maxAngle, minAngle, innerPetalColor, outerPetalColor, receptacleRadius, receptacleColor,
             YYRotation=0, basePosition=[0,0,0]) {

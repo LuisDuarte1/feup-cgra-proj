@@ -4,6 +4,11 @@ import { MyTriangle } from '../primitives/MyTriangle.js';
 import { MyCylinder } from '../primitives/MyCylinder.js';
 
 export class MyLeaf extends CGFobject {
+    /**
+     * Constructor for the leaf of a flower
+     * @param {*} scene 
+     * @param {*} leafColor 
+     */
     constructor(scene, leafColor) {
         super(scene);
         this.triangle = new MyTriangle(scene);

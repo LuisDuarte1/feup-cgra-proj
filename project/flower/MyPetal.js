@@ -2,6 +2,12 @@ import {CGFobject, CGFappearance} from '../../lib/CGF.js';
 import { MyTriangle } from '../primitives/MyTriangle.js';
 
 export class MyPetal extends CGFobject {
+    /**
+     * Constructor for the petal of a flower
+     * @param {*} scene 
+     * @param {*} petalAngle 
+     * @param {*} petalHeight 
+     */
     constructor(scene, petalAngle, petalHeight) {
         super(scene);
         this.triangle = new MyTriangle(scene);

@@ -3,7 +3,7 @@ import {CGFobject, CGFscene} from '../../lib/CGF.js';
 
 export class MySphere extends CGFobject{
     /**
-     * 
+     * Constructs a new sphere object.
      * @param {CGFscene} scene 
      * @param {number} slices 
      * @param {number} stacks 
@@ -24,7 +24,7 @@ export class MySphere extends CGFobject{
     }
 
     /**
-     * 
+     * Initializes the buffers for the sphere.
      * @param {number} slices 
      * @param {number} stacks 
      * @param {boolean} invertNormals 
