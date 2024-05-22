@@ -1,15 +1,19 @@
-import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFshader, CGFtexture, CGFinterface } from "../lib/CGF.js";
+import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFtexture, CGFinterface } from "../lib/CGF.js";
 import { MyPanorama } from "./MyPanorama.js";
 import { MyPlane } from "./primitives/MyPlane.js";
 import { MySphere } from "./primitives/MySphere.js";
-import { MyRock } from "./rock/MyRock.js";
 import { MyRockSet } from "./rock/MyRockSet.js";
 import { MyRockPyramid } from "./rock/MyRockPyramid.js";
 import { MyBee } from "./bee/MyBee.js";
-import { MyFlower } from "./flower/MyFlower.js";
 import { MyAnimatedBee } from "./animation/MyAnimatedBee.js";
-import { MyBeeThorax } from "./bee/MyBeeThorax.js";
-import { MyBigGrass } from "./MyBigGrass.js";
+import { MyBigGrass } from "./grass/MyBigGrass.js";
+import { MyGarden } from "./flower/MyGarden.js";
+import { MyHive } from "./MyHive.js";
+import { vec3Distance } from "./utils.js";
+
+const NO_GROW_HIVE_RADIUS= 15
+const GARDENS_COUNT = 10
+const ROCK_SET_COUNT = 40
 
 /**
  * MyScene
@@ -27,9 +31,12 @@ export class MyScene extends CGFscene {
   }
   init(application) {
     super.init(application);
+
+    this.globalFlowerList = [];
     
     this.initCameras();
     this.initLights();
+    this.initMaterials();
 
     //Background color
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
@@ -49,52 +56,61 @@ export class MyScene extends CGFscene {
     this.sphereVisbility = false;
     this.grass = new MyBigGrass(this);
 
-
-    this.stemTex = new CGFtexture(this, "images/stem.png");
-    this.stemAppearance = new CGFappearance(this);
-    this.stemAppearance.setTexture(this.stemTex);
-    this.stemAppearance.setTextureWrap('REPEAT', 'REPEAT');
-
-    this.leafTex = new CGFtexture(this, "images/leaf.jpeg");
-    this.leafAppearance = new CGFappearance(this);
-    this.leafAppearance.setTexture(this.leafTex);
-    this.leafAppearance.setTextureWrap('REPEAT', 'REPEAT');
-    
-    this.innerPetalTex = new CGFtexture(this, "images/innerPetal.png");
-    this.innerPetalAppearance = new CGFappearance(this);
-    this.innerPetalAppearance.setTexture(this.innerPetalTex);
-    this.innerPetalAppearance.setTextureWrap('REPEAT', 'REPEAT');
-
-    this.outerPetalTex = new CGFtexture(this, "images/outerPetal.png");
-    this.outerPetalAppearance = new CGFappearance(this);
-    this.outerPetalAppearance.setTexture(this.outerPetalTex);
-    this.outerPetalAppearance.setTextureWrap('REPEAT', 'REPEAT');
-
-    this.receptacleTex = new CGFtexture(this, "images/receptacle.png");
-    this.receptacleAppearance = new CGFappearance(this);
-    this.receptacleAppearance.setTexture(this.receptacleTex);
-    this.receptacleAppearance.setTextureWrap('CLAMP_TO_EDGE', 'CLAMP_TO_EDGE');
-
-    this.panoramaTexture = new CGFtexture(this, 'images/panorama.jpg')
-    this.panorama = new MyPanorama(this, this.panoramaTexture)
-
-    this.rock = new MyRock(this)
-    this.rockPyramid = new MyRockPyramid(this, 10, 10)
     this.rockSet = new MyRockSet(this, 10, 10)
     this.bee = new MyBee(this)
     this.beeVisibility = false
+    
+    this.hivePosition = [Math.random() * 50 - 25, 0, -Math.random() * 50]
+    this.rockPyramid = new MyRockPyramid(this)
+    this.hive = new MyHive(this)
+    this.hive.basePosition = [this.hivePosition[0], (this.rockPyramid.maxHeight-0.5)*3, this.hivePosition[2]]
+    const noGrowHiveRadius = 15
+    // this.flower = new MyFlower(this, 5, 3, 0.06, this.darkStemAppearance, this.darkLeafAppearance, 1.5, 8, Math.PI/4, Math.PI/4, 0, this.blueInnerPetalAppearance, this.blueOuterPetalAppearance, 0.5, this.yellowReceptacleAppearance)
+    // this.flowerVisibility = false;
 
-    this.rockVisibility = false
-    this.rockPyramidVisibility = false
-    this.rockSetVisibility = false
+    let flowerAppearances = [[this.purpleInnerPetalAppearance, this.purpleOuterPetalAppearance], [this.blueInnerPetalAppearance, this.blueOuterPetalAppearance], [this.orangeInnerPetalAppearance, this.orangeOuterPetalAppearance], [this.whiteInnerPetalAppearance, this.whiteOuterPetalAppearance]]
+    let receptacleAppearances = [this.yellowReceptacleAppearance, this.greenReceptacleAppearance]
+    let leafAppearances = [this.leafAppearance, this.darkLeafAppearance]
+    let stemAppearances = [this.stemAppearance, this.darkStemAppearance]
 
-    this.flower = new MyFlower(this, 5, 3, 0.04, this.stemAppearance, this.leafAppearance, 1.5, 8, Math.PI/4, Math.PI/4, 0, this.innerPetalAppearance, this.outerPetalAppearance, 0.5, this.receptacleAppearance)
-    this.flowerVisibility = false;
+    this.gardens = []
+    for(let i = 0; i < GARDENS_COUNT; i++){
+      let initalPos = [Math.random() * 200 - 100, 0, Math.random() * 200 - 100]
+      while(true){
+        if(vec3Distance(this.hivePosition, initalPos) <= NO_GROW_HIVE_RADIUS){
+          initalPos = [Math.random() * 200 - 100, 0, Math.random() * 200 - 100]
+          continue
+        }
+        let found = false;
+        for(let garden of this.gardens){
+          if(vec3Distance(initalPos, garden.obj.basePosition) <= 25){
+            found = true
+            break
+          }
+        }
 
-    this.beeThorax = new MyBeeThorax(this)
-    this.beeThoraxVisibility = false
+        if(!found) break
+        initalPos = [Math.random() * 200 - 100, 0, Math.random() * 200 - 100]
+      }
+      let garden = new MyGarden(this, 5, 5, flowerAppearances, stemAppearances, leafAppearances, receptacleAppearances, initalPos)
+      this.gardens.push({obj: garden, pos: initalPos})
+    }
 
+    this.rockSets = []
+    for(let i = 0; i < ROCK_SET_COUNT; i++){
+      let initalPos = [Math.random() * 200 - 100, 0, Math.random() * 200 - 100]
+      while(true){
+        if(vec3Distance(this.hivePosition, initalPos) <= NO_GROW_HIVE_RADIUS){
+          initalPos = [Math.random() * 200 - 100, 0, Math.random() * 200 - 100]
+          continue
+        }
+        break
+      }
+      let rockSet = new MyRockSet(this, 10, 10)
+      this.rockSets.push({obj: rockSet, pos: initalPos})
+    }
     this.animatedBee = new MyAnimatedBee(this, [0, 3, 0])
+
 
     this.updatePeriod = 30;
     this.setUpdatePeriod(this.updatePeriod);
@@ -111,15 +127,6 @@ export class MyScene extends CGFscene {
 
     this.enableTextures(true);
 
-    //------ Applied Material
-    this.quadMaterial = new CGFappearance(this);
-    this.quadMaterial.loadTexture('images/earth.jpg');
-    this.quadMaterial.setTextureWrap('REPEAT', 'REPEAT');
-
-    this.texture = new CGFtexture(this, "images/terrain.jpg");
-    this.appearance = new CGFappearance(this);
-    this.appearance.setTexture(this.texture);
-    this.appearance.setTextureWrap('REPEAT', 'REPEAT');
 
   }
 
@@ -138,6 +145,102 @@ export class MyScene extends CGFscene {
       vec3.fromValues(5, 5, 5),
       vec3.fromValues(0, 0, 0)
     );
+  }
+
+  initMaterials() {
+    this.quadMaterial = new CGFappearance(this);
+    this.quadMaterial.loadTexture('images/earth.jpg');
+    this.quadMaterial.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.texture = new CGFtexture(this, "images/terrain.jpg");
+    this.appearance = new CGFappearance(this);
+    this.appearance.setTexture(this.texture);
+    this.appearance.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.stemTex = new CGFtexture(this, "images/stem.png");
+    this.stemAppearance = new CGFappearance(this);
+    this.stemAppearance.setTexture(this.stemTex);
+    this.stemAppearance.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.darkStemTex = new CGFtexture(this, "images/darkStem.png");
+    this.darkStemAppearance = new CGFappearance(this);
+    this.darkStemAppearance.setTexture(this.darkStemTex);
+    this.darkStemAppearance.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.leafTex = new CGFtexture(this, "images/leaf.jpeg");
+    this.leafAppearance = new CGFappearance(this);
+    this.leafAppearance.setAmbient(1, 1, 1, 1);
+    this.leafAppearance.setTexture(this.leafTex);
+    this.leafAppearance.setTextureWrap('REPEAT', 'REPEAT');
+    
+    this.darkLeafTex = new CGFtexture(this, "images/darkLeaf.avif");
+    this.darkLeafAppearance = new CGFappearance(this);
+    this.darkLeafAppearance.setAmbient(1, 1, 1, 1);
+    this.darkLeafAppearance.setTexture(this.darkLeafTex);
+    this.darkLeafAppearance.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.purpleInnerPetalTex = new CGFtexture(this, "images/innerPetal.png");
+    this.purpleInnerPetalAppearance = new CGFappearance(this);
+    this.purpleInnerPetalAppearance.setAmbient(1, 1, 1, 1);
+    this.purpleInnerPetalAppearance.setTexture(this.purpleInnerPetalTex);
+    this.purpleInnerPetalAppearance.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.purpleOuterPetalTex = new CGFtexture(this, "images/outerPetal.png");
+    this.purpleOuterPetalAppearance = new CGFappearance(this);
+    this.purpleOuterPetalAppearance.setAmbient(1, 1, 1, 1);
+    this.purpleOuterPetalAppearance.setTexture(this.purpleOuterPetalTex);
+    this.purpleOuterPetalAppearance.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.blueInnerPetalTex = new CGFtexture(this, "images/blueInnerPetal.avif");
+    this.blueInnerPetalAppearance = new CGFappearance(this);
+    this.blueInnerPetalAppearance.setAmbient(1, 1, 1, 1);
+    this.blueInnerPetalAppearance.setTexture(this.blueInnerPetalTex);
+    this.blueInnerPetalAppearance.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.blueOuterPetalTex = new CGFtexture(this, "images/blueOuterPetal.jpeg");
+    this.blueOuterPetalAppearance = new CGFappearance(this);
+    this.blueOuterPetalAppearance.setAmbient(1, 1, 1, 1);
+    this.blueOuterPetalAppearance.setTexture(this.blueOuterPetalTex);
+    this.blueOuterPetalAppearance.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.orangeOuterPetalTex = new CGFtexture(this, "images/orangeOuterPetal.jpeg");
+    this.orangeOuterPetalAppearance = new CGFappearance(this);
+    this.orangeOuterPetalAppearance.setAmbient(1, 1, 1, 1);
+    this.orangeOuterPetalAppearance.setTexture(this.orangeOuterPetalTex);
+    this.orangeOuterPetalAppearance.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.orangeInnerPetalTex = new CGFtexture(this, "images/orangeInnerPetal.avif");
+    this.orangeInnerPetalAppearance = new CGFappearance(this);
+    this.orangeInnerPetalAppearance.setAmbient(1, 1, 1, 1);
+    this.orangeInnerPetalAppearance.setTexture(this.orangeInnerPetalTex);
+    this.orangeInnerPetalAppearance.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.whiteInnerPetalTex = new CGFtexture(this, "images/whiteInnerPetal.jpeg");
+    this.whiteInnerPetalAppearance = new CGFappearance(this);
+    this.whiteInnerPetalAppearance.setAmbient(1, 1, 1, 1);
+    this.whiteInnerPetalAppearance.setTexture(this.whiteInnerPetalTex);
+    this.whiteInnerPetalAppearance.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.whiteOuterPetalTex = new CGFtexture(this, "images/whiteOuterPetal.jpeg");
+    this.whiteOuterPetalAppearance = new CGFappearance(this);
+    this.whiteOuterPetalAppearance.setAmbient(1, 1, 1, 1);
+    this.whiteOuterPetalAppearance.setTexture(this.whiteOuterPetalTex);
+    this.whiteOuterPetalAppearance.setTextureWrap('REPEAT', 'REPEAT');
+
+    this.yellowReceptacleTex = new CGFtexture(this, "images/receptacle.png");
+    this.yellowReceptacleAppearance = new CGFappearance(this);
+    this.yellowReceptacleAppearance.setAmbient(1, 1, 1, 1);
+    this.yellowReceptacleAppearance.setTexture(this.yellowReceptacleTex);
+    this.yellowReceptacleAppearance.setTextureWrap('CLAMP_TO_EDGE', 'CLAMP_TO_EDGE');
+
+    this.greenReceptacleTex = new CGFtexture(this, "images/greenReceptacle.png");
+    this.greenReceptacleAppearance = new CGFappearance(this);
+    this.greenReceptacleAppearance.setAmbient(1, 1, 1, 1);
+    this.greenReceptacleAppearance.setTexture(this.greenReceptacleTex);
+    this.greenReceptacleAppearance.setTextureWrap('CLAMP_TO_EDGE', 'CLAMP_TO_EDGE');
+
+    this.panoramaTexture = new CGFtexture(this, 'images/panorama.jpg')
+    this.panorama = new MyPanorama(this, this.panoramaTexture)
   }
   setDefaultAppearance() {
     this.setAmbient(0.2, 0.4, 0.8, 1.0);
@@ -190,8 +293,34 @@ export class MyScene extends CGFscene {
     // ---- BEGIN Primitive drawing section
     if(this.rockVisibility) this.rock.display()
     if(this.rockSetVisibility) this.rockSet.display()
-    if(this.rockPyramidVisibility) this.rockPyramid.display()
-    if(this.flowerVisibility) this.flower.display();
+    for(let garden of this.gardens){
+      this.pushMatrix()
+      this.translate(...garden.pos)
+      garden.obj.display()
+      this.popMatrix()
+    }
+
+    for(let rockSet of this.rockSets){
+      this.pushMatrix()
+      this.translate(...rockSet.pos)
+      rockSet.obj.display()
+      this.popMatrix()
+    }
+    ///bee hive
+    this.pushMatrix()
+      this.translate(...this.hivePosition)
+
+      this.pushMatrix()
+      this.scale(4,3,4)
+      this.rockPyramid.display()
+      this.popMatrix()
+
+      this.pushMatrix()
+      this.translate(0, (this.rockPyramid.maxHeight-0.5)*3 , 0)
+      this.hive.display()
+      this.popMatrix()
+    this.popMatrix()
+    // if(this.flowerVisibility) this.flower.display();
     if (this.beeVisibility) this.bee.display()
     if (this.beeThoraxVisibility) this.beeThorax.display()
     

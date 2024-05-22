@@ -2,6 +2,11 @@ import { CGFobject } from '../../lib/CGF.js';
 import { MySphere } from '../primitives/MySphere.js';
 
 export class MyReceptacle extends CGFobject {
+    /**
+     * Constructor for the receptacle of a flower
+     * @param {*} scene 
+     * @param {*} radius 
+     */
     constructor(scene, radius) {
         super(scene);
         this.receptacle = new MySphere(scene, 40, 20, false, radius, radius); 

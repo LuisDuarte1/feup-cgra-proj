@@ -4,6 +4,11 @@ import { MyTriangle } from '../primitives/MyTriangle.js';
 import { MyCylinder } from '../primitives/MyCylinder.js';
 
 export class MyLeaf extends CGFobject {
+    /**
+     * Constructor for the leaf of a flower
+     * @param {*} scene 
+     * @param {*} leafColor 
+     */
     constructor(scene, leafColor) {
         super(scene);
         this.triangle = new MyTriangle(scene);
@@ -36,7 +41,7 @@ export class MyLeaf extends CGFobject {
         this.scene.scale(0.5, 0.5, 0.5);
         this.scene.translate(0, 1.1, 0);
         this.scene.scale(1, 0.5, 1);
-        this.scene.rotate(Math.PI/5, 1, 0, 0);
+        this.scene.rotate(Math.PI/4, 1, 0, 0);
         this.leafColor.apply();
         this.triangle.display();
         this.scene.popMatrix();

@@ -15,7 +15,7 @@ export class MyBeeLegs extends CGFobject {
         this.brownAppearance = new CGFappearance(this.scene);
         setColorRGB(this.brownAppearance, 8, 7, 7);
     }
-    display() {
+    display(hasPolen=false) {
         this.scene.pushMatrix()
         this.scene.scale(0.07, 0.3, 0.07)
         this.scene.translate(0, -1, 0)
@@ -33,6 +33,7 @@ export class MyBeeLegs extends CGFobject {
 
         this.scene.pushMatrix()
         this.scene.scale(0.05, 0.3, 0.05)
+        this.scene.rotate(hasPolen ? 40*Math.PI/180 : 0, 1, 0, 0)
         this.scene.translate(0, -1, 0)
         this.brownAppearance.apply()
         this.sphere.display()
@@ -40,7 +41,7 @@ export class MyBeeLegs extends CGFobject {
 
         this.scene.pushMatrix()
         this.scene.translate(0, -0.55, 0)
-        this.scene.rotate(20 * Math.PI / 180, 1, 0, 0)
+        this.scene.rotate(hasPolen ? 40*Math.PI/180 : 20 * Math.PI / 180, 1, 0, 0)
         this.scene.scale(0.02, 0.09, 0.02)
         this.scene.translate(0, -1, 0)
         this.brownAppearance.apply()
@@ -49,7 +50,7 @@ export class MyBeeLegs extends CGFobject {
 
         this.scene.pushMatrix()
         this.scene.translate(0, -0.5, 0)
-        this.scene.rotate(-20 * Math.PI / 180, 1, 0, 0)
+        this.scene.rotate(hasPolen ? 40*Math.PI/180 : 20 * Math.PI / 180, 1, 0, 0)
         this.scene.scale(0.03, 0.1, 0.025)
         this.scene.translate(0, -1, 0)
         this.sphere.display()

@@ -1,6 +1,7 @@
 import { CGFappearance } from "../lib/CGF.js";
 
 /**
+ * Function that sets the color of an appearance to the given RGB values
  * @param {CGFappearance} appearance
  * @param {number} r 
  * @param {number} g 
@@ -16,7 +17,7 @@ export function setColorRGB(appearance,r, g, b){
 }
 
 /**
- * 
+ * Function that applies a scalar to a point in a given direction
  * @param {number[]} direction it's assumed that it's unitary
  * @param {number[]} point 
  * @param {number} scalar
@@ -27,7 +28,7 @@ export function applyScalarToPointInDirection(direction, point, scalar){
 }
 
 /**
- * 
+ * Function that changes the vertex in the vertexList at the given position
  * @param {number[]} vertexList 
  * @param {number[]} vertex 
  * @param {number} pos 
@@ -36,4 +37,27 @@ export function changeVertex(vertexList, vertex, pos){
     vertexList[pos*3] = vertex[0]
     vertexList[pos*3 + 1] = vertex[1]
     vertexList[pos*3 + 2] = vertex[2]
+}
+
+/**
+ * 
+ * @param {number[]} a 
+ * @param {number[]} b 
+ * @returns {number}
+ */
+export function vec3Distance(a,b){
+    return Math.sqrt(
+        Math.pow(a[0]-b[0], 2) +
+        Math.pow(a[1]-b[1], 2) +
+        Math.pow(a[2]-b[2], 2)
+    )
+}
+
+/**
+ * 
+ * @param {number[]} a 
+ * @returns {number}
+ */
+export function vec3Magnitude(a){
+    return Math.sqrt(a[0]*a[0] + a[1]*a[1] * a[2]*a[2])
 }

@@ -3,6 +3,7 @@ import { MyBeeHead } from "./MyBeeHead.js";
 import { MyBeeThorax } from "./MyBeeThorax.js";
 import { MyBeeAbdomen } from "./MyBeeAbdomen.js";
 import { setColorRGB } from "../utils.js";
+import { MyPolen } from "../flower/MyPolen.js";
 
 
 
@@ -16,6 +17,7 @@ export class MyBee extends CGFobject{
         this.head = new MyBeeHead(scene)
         this.thorax = new MyBeeThorax(scene, this.frontWingAngle, this.backWingAngle)
         this.abdomen = new MyBeeAbdomen(scene)
+        this.polen = null;
 
        /*this.position = {x: x, y: y, z: z}
         this.def
@@ -39,7 +41,7 @@ export class MyBee extends CGFobject{
         this.scene.pushMatrix()
         this.scene.translate(0.5, 0, 0)
         this.scene.scale(0.9, 0.9, 0.9)
-        this.thorax.display()
+        this.thorax.display(this.polen ? true : false)
         this.scene.popMatrix()
     }
     displayAbdomen(){
@@ -52,7 +54,13 @@ export class MyBee extends CGFobject{
     }
     display(){
 
-
+        if(this.polen){
+            this.scene.pushMatrix();
+            this.scene.translate(0.3, -0.35, 0)
+            this.scene.scale(0.06, 0.08, 0.06)
+            this.polen.display();
+            this.scene.popMatrix();
+        }
         this.displayHead()
         this.displayThorax()
         this.displayAbdomen()

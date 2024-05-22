@@ -7,6 +7,7 @@ import {CGFinterface, dat, CGFcameraAxisID} from '../lib/CGF.js';
 export class MyInterface extends CGFinterface {
     constructor() {
         super();
+        this.activeKeys = {};
     }
 
     init(application) {
@@ -24,15 +25,19 @@ export class MyInterface extends CGFinterface {
         this.gui.add(this.scene, 'scaleFactor', 0.5, 3).name('Scale Factor');
         this.gui.add(this.scene, 'speedFactor', 0.1, 3).name('Speed Factor');
 
-        this.gui.add(this.scene, 'flowerVisibility').name('Flower')
-
-        this.gui.add(this.scene, 'rockVisibility').name('Rock')
-        this.gui.add(this.scene, 'rockSetVisibility').name('RockSet')
-        this.gui.add(this.scene, 'rockPyramidVisibility').name('Rock Pyramid')
-
 
         this.cameraAngle = [0, 0];
         this.cameraZoom = 0;
+        var beeAudio = new Audio('sounds/bee.mp3');
+        beeAudio.loop = true;
+        beeAudio.volume = 0.7;
+        beeAudio.play();
+    
+        var ambientAudio = new Audio('sounds/background.mp3');
+        ambientAudio.loop = true;
+        ambientAudio.volume = 0.9;
+        ambientAudio.play();
+        
         this.initKeys();
         return true;
     }
