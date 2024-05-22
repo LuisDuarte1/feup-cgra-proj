@@ -30,12 +30,12 @@ export class MyInterface extends CGFinterface {
         this.cameraZoom = 0;
         var beeAudio = new Audio('sounds/bee.mp3');
         beeAudio.loop = true;
-        beeAudio.volume = 1;
+        beeAudio.volume = 0.7;
         beeAudio.play();
     
         var ambientAudio = new Audio('sounds/background.mp3');
         ambientAudio.loop = true;
-        ambientAudio.volume = 1;
+        ambientAudio.volume = 0.9;
         ambientAudio.play();
         
         this.initKeys();
