@@ -3,6 +3,24 @@ import { MyStem } from './MyStem.js';
 import { MyCorolla } from './MyCorolla.js';
 
 export class MyFlower extends CGFobject {
+    /**
+     * Constructor for the flower
+     * @param {*} scene 
+     * @param {*} numCylinders 
+     * @param {*} height 
+     * @param {*} radius 
+     * @param {*} stemAppearance 
+     * @param {*} leafAppearance 
+     * @param {*} corollaRadius 
+     * @param {*} numPetals 
+     * @param {*} petalAngle 
+     * @param {*} maxAngle 
+     * @param {*} minAngle 
+     * @param {*} innerPetalColor 
+     * @param {*} outerPetalColor 
+     * @param {*} receptacleRadius 
+     * @param {*} receptacleColor 
+     */
     constructor(scene, numCylinders, height, radius, stemAppearance, leafAppearance, corollaRadius, numPetals, petalAngle, maxAngle, minAngle, innerPetalColor, outerPetalColor, receptacleRadius, receptacleColor) {
         super(scene);
         this.height = height;
@@ -10,9 +28,6 @@ export class MyFlower extends CGFobject {
         let minHeight = height/5;
         this.stem = new MyStem(scene, numCylinders, this.height, maxHeight, minHeight, radius, stemAppearance, leafAppearance);
         this.corolla = new MyCorolla(scene, corollaRadius, numPetals, petalAngle, maxAngle, minAngle, innerPetalColor, outerPetalColor, receptacleRadius, receptacleColor);
-        this.initMaterials();
-    }
-    initMaterials() {
     }
     display() {
         this.scene.pushMatrix()

@@ -1,4 +1,17 @@
+/**
+ * MyAnimatedObject
+ * 
+ */
 export class MyAnimatedObject{
+    /**
+     * 
+     * @param {*} scene 
+     * @param {*} object object to be animated
+     * @param {*} start start position
+     * @param {*} end end position
+     * @param {*} startTime starting time
+     * @param {*} duration duration of the animation
+     */
     constructor(scene, object, start = 0, end = 1, startTime = 0, duration = Infinity){
         this.scene = scene;
         this.object = object;
@@ -23,7 +36,13 @@ export class MyAnimatedObject{
             ? 1
             : -Math.pow(2, 10 * x - 10) * Math.sin((x * 10 - 10.75) * c4);        
     }
-
+    /**
+     * Function to generate a sinusoidal wave for the animation
+     * @param {*} x 
+     * @param {*} amplitude 
+     * @param {*} frequency 
+     * @returns 
+     */
     sinFunction(x, amplitude = 1, frequency = 1){
         return amplitude * Math.sin(2*x*frequency);
     }

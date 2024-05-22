@@ -3,6 +3,19 @@ import { MyPetal } from './MyPetal.js';
 import { MyReceptacle } from './MyReceptacle.js';
 
 export class MyCorolla extends CGFobject {
+    /**
+     * Constructor for the corolla of a flower
+     * @param {*} scene 
+     * @param {*} corollaRadius 
+     * @param {*} numPetals 
+     * @param {*} petalAngle 
+     * @param {*} maxAngle 
+     * @param {*} minAngle 
+     * @param {*} innerPetalColor 
+     * @param {*} outerPetalColor 
+     * @param {*} receptacleRadius 
+     * @param {*} receptacleColor 
+     */
     constructor(scene, corollaRadius, numPetals, petalAngle, maxAngle, minAngle, innerPetalColor, outerPetalColor, receptacleRadius, receptacleColor) {
         super(scene);
         this.corollaRadius = corollaRadius;
@@ -21,14 +34,16 @@ export class MyCorolla extends CGFobject {
         this.width = 2 * Math.PI * petalRadius / numPetals;
         this.generateAngles();
     }
-
+    /**
+     * Function to generate random angles for the petals, within the specified range, so that they are not all the same
+     */
     generateAngles(){
         this.angles = [];
         for (let i = 0; i < this.numPetals; i++) {
             this.angles.push(Math.random() * (this.maxAngle - this.minAngle) + this.minAngle);
         }
     }
-
+    
     display() {
 
         let angle = 2 * Math.PI / this.numPetals;
