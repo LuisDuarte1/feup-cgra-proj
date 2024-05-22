@@ -1,4 +1,4 @@
-import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFshader, CGFtexture } from "../lib/CGF.js";
+import { CGFscene, CGFcamera, CGFaxis, CGFappearance, CGFshader, CGFtexture, CGFinterface } from "../lib/CGF.js";
 import { MyPanorama } from "./MyPanorama.js";
 import { MyPlane } from "./primitives/MyPlane.js";
 import { MySphere } from "./primitives/MySphere.js";
@@ -15,8 +15,14 @@ import { MyGarden } from "./flower/MyGarden.js";
  * @constructor
  */
 export class MyScene extends CGFscene {
-  constructor() {
+
+  /**
+   * 
+   * @param {CGFinterface} myInterface 
+   */
+  constructor(myInterface) {
     super();
+    this.myInterface = myInterface;
   }
   init(application) {
     super.init(application);
@@ -40,7 +46,7 @@ export class MyScene extends CGFscene {
     
     //Initialize scene objects
     this.axis = new CGFaxis(this);
-    this.plane = new MyPlane(this,30);
+    this.plane = new MyPlane(this,15);
     this.sphere = new MySphere(this, 20, 20);
     this.sphereVisbility = false;
     this.grass = new MyBigGrass(this);
@@ -55,8 +61,8 @@ export class MyScene extends CGFscene {
     this.rockPyramidVisibility = false
     this.rockSetVisibility = false
     
-    this.flower = new MyFlower(this, 5, 3, 0.06, this.darkStemAppearance, this.darkLeafAppearance, 1.5, 8, Math.PI/4, Math.PI/4, 0, this.blueInnerPetalAppearance, this.blueOuterPetalAppearance, 0.5, this.yellowReceptacleAppearance)
-    this.flowerVisibility = false;
+    // this.flower = new MyFlower(this, 5, 3, 0.06, this.darkStemAppearance, this.darkLeafAppearance, 1.5, 8, Math.PI/4, Math.PI/4, 0, this.blueInnerPetalAppearance, this.blueOuterPetalAppearance, 0.5, this.yellowReceptacleAppearance)
+    // this.flowerVisibility = false;
 
     let flowerAppearances = [[this.purpleInnerPetalAppearance, this.purpleOuterPetalAppearance], [this.blueInnerPetalAppearance, this.blueOuterPetalAppearance], [this.orangeInnerPetalAppearance, this.orangeOuterPetalAppearance], [this.whiteInnerPetalAppearance, this.whiteOuterPetalAppearance]]
     let receptacleAppearances = [this.yellowReceptacleAppearance, this.greenReceptacleAppearance]
@@ -66,8 +72,7 @@ export class MyScene extends CGFscene {
     this.garden = new MyGarden(this, 5, 5, flowerAppearances, stemAppearances, leafAppearances, receptacleAppearances)
     this.gardenVisibility = true
 
-    this.animatedBee = new MyAnimatedBee(this)
-    this.animatedBeeVisibility = false
+    this.animatedBee = new MyAnimatedBee(this, [0, 3, 0])
 
     this.updatePeriod = 30;
     this.setUpdatePeriod(this.updatePeriod);
@@ -80,6 +85,7 @@ export class MyScene extends CGFscene {
     //Objects connected to MyInterface
     this.displayAxis = true;
     this.scaleFactor = 1;
+    this.speedFactor = 1;
 
     this.enableTextures(true);
 
@@ -205,26 +211,15 @@ export class MyScene extends CGFscene {
     this.setShininess(10.0);
   }
 
-  checkKeys(){
-    var text = "Keys pressed: ";
-    var keysPressed = false;
-
-    if(this.gui.isKeyPressed("KeyW")){
-      text += " W ";
-      keysPressed = true;
-    }
-    if(this.gui.isKeyPressed("KeyS")){
-      text += " S ";
-      keysPressed = true;
-    }
-    if (keysPressed) console.log(text);
-  }
 
   update(t){
 		let timeSinceAppStart = (t - this.appStartTime) / 1000.0;
+    this.animatedBee.speedFactor = this.speedFactor;
+    this.animatedBee.scaleFactor = this.scaleFactor;
 		for (let i = 0; i < this.animatedObjects.length; i++)
 			this.animatedObjects[i].update(timeSinceAppStart);
   }
+
   display() {
     // ---- BEGIN Background, camera and axis setup
     // Clear image and depth buffer everytime we update the scene
@@ -233,6 +228,23 @@ export class MyScene extends CGFscene {
     // Initialize Model-View matrix as identity (no transformation
     this.updateProjectionMatrix();
     this.loadIdentity();
+    let beePosition = this.animatedBee.position;
+
+    // first pos means offset in curr bee direction, second pos means offset in Y in relation to the bee
+    let [cameraOffsetDir, cameraOffsetY] = [-6, 2]
+
+    let [directionX, directionZ] = [Math.cos(this.animatedBee.direction), Math.sin(this.animatedBee.direction)]
+
+    let cameraPosition = [
+      beePosition[0]+directionX*cameraOffsetDir,
+      beePosition[1]+cameraOffsetY,
+      beePosition[2]+directionZ*cameraOffsetDir,
+    ]
+
+    this.camera.setPosition(cameraPosition);
+    this.camera.setTarget(beePosition);
+    this.myInterface.updateCameraAngle();
+
     // Apply transformations corresponding to the camera position relative to the origin
     this.applyViewMatrix();
 
@@ -244,21 +256,26 @@ export class MyScene extends CGFscene {
     if(this.rockVisibility) this.rock.display()
     if(this.rockSetVisibility) this.rockSet.display()
     if(this.rockPyramidVisibility) this.rockPyramid.display()
-    if(this.flowerVisibility) this.flower.display();
+    // if(this.flowerVisibility) this.flower.display();
+    if(this.gardenVisibility) this.garden.display()
     if (this.beeVisibility) this.bee.display()
-    this.garden.display()
-    this.grass.display();
+    if (this.beeThoraxVisibility) this.beeThorax.display()
     
     
     this.pushMatrix();
+    this.translate(-50, 0, -50)
+    this.grass.display();
+    this.popMatrix();
+
+    this.pushMatrix();
     this.appearance.apply();
-    this.translate(0,-100,0);
-    this.scale(400,400,400);
+    this.scale(400,1,400);
     this.rotate(-Math.PI/2.0,1,0,0);
     this.plane.display();
     this.popMatrix();
+
+    this.animatedBee.display()
     // ---- END Primitive drawing section
-    this.translate(0,2,0);
-    if(this.animatedBeeVisibility) this.animatedBee.display()
+
   }
 }
