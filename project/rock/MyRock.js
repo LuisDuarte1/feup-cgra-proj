@@ -6,8 +6,10 @@ import { applyScalarToPointInDirection, changeVertex, setColorRGB } from "../uti
 export class MyRock extends CGFobject{
 
     /**
-     * 
-     * @param {number} magnitude 
+     * Randomizes the vertices of the initial sphere to create a rock-like appearance.
+     * It applies a random deviation to each vertex along its normal, except for the top and bottom vertices.
+     *
+     * @param {number} magnitude - The magnitude of the random deviation. Higher values result in smaller deviations.
      */
     randomizeVertices(magnitude){
         let vertices = this.initialSphere.vertices
@@ -24,7 +26,11 @@ export class MyRock extends CGFobject{
         }
         this.initialSphere.initGLBuffers()
     }
-    
+    /**
+     * Constructs a new rock object.
+     * @param {*} scene 
+     * @param {*} randomMagnitude - The magnitude of the random deviation. Higher values result in smaller deviations.
+     */
     constructor(scene, randomMagnitude=8){
         super(scene)
         this.appearance = new CGFappearance(scene)

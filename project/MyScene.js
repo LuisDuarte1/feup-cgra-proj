@@ -9,7 +9,7 @@ import { MyBee } from "./bee/MyBee.js";
 import { MyFlower } from "./flower/MyFlower.js";
 import { MyAnimatedBee } from "./animation/MyAnimatedBee.js";
 import { MyBeeThorax } from "./bee/MyBeeThorax.js";
-import { MyBigGrass } from "./MyBigGrass.js";
+import { MyBigGrass } from "./grass/MyBigGrass.js";
 
 /**
  * MyScene

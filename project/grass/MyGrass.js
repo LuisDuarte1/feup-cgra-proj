@@ -1,4 +1,4 @@
-import { CGFobject, CGFscene, CGFshader } from "../lib/CGF.js";
+import { CGFobject, CGFscene, CGFshader } from "../../lib/CGF.js";
 
 
 const BLADE_HEIGHT = 1.3;

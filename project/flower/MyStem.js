@@ -50,7 +50,7 @@ export class MyStem extends CGFobject {
         this.heights = this.heights.sort().reverse();
     }
     /**
-     * Generates an array of disalignment vectors for each cylinder in the stem.
+     * Generatwes an array of disalignment vectors for each cylinder in the stem.
      * Each disalignment vector is a 3D vector [x_, 1, z_] where x_ and z_ are 
      * the cosine and sine of a random angle, respectively, rounded to two decimal places.
      * The vectors are accumulated in the x and z directions to create a cumulative disalignment effect.
@@ -64,7 +64,6 @@ export class MyStem extends CGFobject {
 
         for (let i = 0; i < numCylinders; i++){
             let randomAngle = Math.random() * 2 * Math.PI;
-            console.log(randomAngle);
             let x_ = Math.cos(randomAngle);
             let z_ = Math.sin(randomAngle);
             x_ = Math.round(x_ * 100) / 100;

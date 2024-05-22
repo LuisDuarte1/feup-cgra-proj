@@ -1,4 +1,4 @@
-import { CGFobject, CGFscene } from "../lib/CGF.js";
+import { CGFobject, CGFscene } from "../../lib/CGF.js";
 import { MyGrass } from "./MyGrass.js";
 
 

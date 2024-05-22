@@ -11,7 +11,9 @@ export class MyTriangle extends CGFobject {
 
 		this.initBuffers();
 	}
-
+	/**
+	 * Initializes the buffers for the triangle.
+	 */
 	initBuffers() {
 		this.vertices = [
 				-0.5, 0, 0,
