@@ -215,6 +215,71 @@ export class MyAnimatedBee extends MyAnimatedObject{
                 this.savedVelocityXZ = 0;
             }
 
+        } else if(this.stateAuto == "rotateToHive"){
+            const directionVector = [-Math.cos(this.direction), -Math.sin(this.direction)]
+            
+            const toDirectionVector = [
+                this.position[0] - this.stateTargetPos[0],
+                this.position[2] - this.stateTargetPos[2]
+            ]
+
+            const sameSign = -Math.sin(this.savedDirection) * toDirectionVector[1] > 0
+
+            const finalDirection = Math.acos(
+                (directionVector[0]*toDirectionVector[0] + directionVector[1]*toDirectionVector[1])
+                /
+                (
+                    Math.sqrt(directionVector[0]*directionVector[0] + directionVector[1]*directionVector[1])
+                    *
+                    Math.sqrt(toDirectionVector[0]*toDirectionVector[0] + toDirectionVector[1]*toDirectionVector[1])
+                )
+            )
+
+            if(isNaN(finalDirection)){
+                this.stateAuto = "moveToHive"
+                return
+            }
+            console.log(finalDirection)
+            
+            if(Math.abs(finalDirection) >= 0.0001){
+
+                this.direction += 
+                    Math.abs(finalDirection) >= AUTO_ROTATION_STEP*deltaTime ? (sameSign ? -1 : 1)*AUTO_ROTATION_STEP*deltaTime : (sameSign ? -1 : 1) * finalDirection
+            } else {
+                this.stateAuto = "moveToHive"
+            }
+        } else if(this.stateAuto == "moveToHive"){
+            const toDirectionVector = [
+                this.position[0] - this.stateTargetPos[0], 
+                this.position[1] - this.stateTargetPos[1], 
+                this.position[2] - this.stateTargetPos[2]
+            ]
+
+            const toDirectionVectorNormalized = [
+                toDirectionVector[0] / vec3Magnitude(toDirectionVector),
+                toDirectionVector[1] / vec3Magnitude(toDirectionVector),
+                toDirectionVector[2] / vec3Magnitude(toDirectionVector),
+            ]
+
+            const steps = Math.abs(this.position[0]-this.stateTargetPos[0])/toDirectionVectorNormalized[0]
+
+            if(Math.abs(steps) <= 0.5){
+                this.object.polen = null;
+                this.velocityXZ = 0; 
+                this.stateAuto = ""
+                this.stateTargetPos = [0,0,0]
+                this.auto = false
+                this.savedDirection = 0;
+                this.savedHeight = 0;
+                this.savedVelocityXZ = 0;
+                return
+            }
+
+            this.position = [
+                this.position[0] - toDirectionVectorNormalized[0]*this.savedVelocityXZ*deltaTime, 
+                this.position[1] - toDirectionVectorNormalized[1]*this.savedVelocityXZ*deltaTime,
+                this.position[2] - toDirectionVectorNormalized[2]*this.savedVelocityXZ*deltaTime,
+            ]
         }
     }
 
@@ -283,6 +348,18 @@ export class MyAnimatedBee extends MyAnimatedObject{
             
             this.stateAuto = "restoreHeight"
         }
+
+        if(this.scene.myInterface.isKeyPressed("KeyO") && !this.auto
+            && this.object.polen != null){
+                this.savedVelocityXZ = Math.max(this.velocityXZ, 3);
+                this.savedHeight = this.position[1];
+                this.savedDirection = this.direction;
+                this.stateTargetPos = this.scene.hive.getHolePosition()
+                this.auto = true;
+                this.velocityY = 0;
+                this.velocityXZ = 0;
+                this.stateAuto = "rotateToHive"
+            }
 
         
 

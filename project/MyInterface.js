@@ -25,10 +25,6 @@ export class MyInterface extends CGFinterface {
         this.gui.add(this.scene, 'scaleFactor', 0.5, 3).name('Scale Factor');
         this.gui.add(this.scene, 'speedFactor', 0.1, 3).name('Speed Factor');
 
-        this.gui.add(this.scene, 'rockVisibility').name('Rock')
-        this.gui.add(this.scene, 'rockSetVisibility').name('RockSet')
-        this.gui.add(this.scene, 'rockPyramidVisibility').name('Rock Pyramid')
-
 
         this.cameraAngle = [0, 0];
         this.cameraZoom = 0;

@@ -39,6 +39,17 @@ export class MyHive extends CGFscene{
         this.basePosition = basePosition;
     }
 
+    /**
+     * @returns {number[]}
+     */
+    getHolePosition(){
+        return [
+            this.basePosition[0],
+            this.basePosition[1] + 1.75,
+            this.basePosition[2] + 5 + 0.15,
+        ]
+    }
+
     display(){
         this.scene.pushMatrix()
         this.scene.scale(5,5,5)
