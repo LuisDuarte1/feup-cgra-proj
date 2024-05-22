@@ -15,6 +15,7 @@ import { vec3Distance } from "./utils.js";
 
 const NO_GROW_HIVE_RADIUS= 15
 const GARDENS_COUNT = 10
+const ROCK_SET_COUNT = 20
 
 /**
  * MyScene
@@ -78,7 +79,7 @@ export class MyScene extends CGFscene {
     for(let i = 0; i < GARDENS_COUNT; i++){
       let initalPos = [Math.random() * 200 - 100, 0, Math.random() * 200 - 100]
       while(true){
-        if(vec3Distance(this.hivePosition, initalPos) <= noGrowHiveRadius){
+        if(vec3Distance(this.hivePosition, initalPos) <= NO_GROW_HIVE_RADIUS){
           initalPos = [Math.random() * 200 - 100, 0, Math.random() * 200 - 100]
           continue
         }
@@ -95,6 +96,20 @@ export class MyScene extends CGFscene {
       }
       let garden = new MyGarden(this, 5, 5, flowerAppearances, stemAppearances, leafAppearances, receptacleAppearances, initalPos)
       this.gardens.push({obj: garden, pos: initalPos})
+    }
+
+    this.rockSets = []
+    for(let i = 0; i < ROCK_SET_COUNT; i++){
+      let initalPos = [Math.random() * 200 - 100, 0, Math.random() * 200 - 100]
+      while(true){
+        if(vec3Distance(this.hivePosition, initalPos) <= NO_GROW_HIVE_RADIUS){
+          initalPos = [Math.random() * 200 - 100, 0, Math.random() * 200 - 100]
+          continue
+        }
+        break
+      }
+      let rockSet = new MyRockSet(this, 10, 10)
+      this.rockSets.push({obj: rockSet, pos: initalPos})
     }
 
 
@@ -295,6 +310,13 @@ export class MyScene extends CGFscene {
       this.pushMatrix()
       this.translate(...garden.pos)
       garden.obj.display()
+      this.popMatrix()
+    }
+
+    for(let rockSet of this.rockSets){
+      this.pushMatrix()
+      this.translate(...rockSet.pos)
+      rockSet.obj.display()
       this.popMatrix()
     }
     ///bee hive
