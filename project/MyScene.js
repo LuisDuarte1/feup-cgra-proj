@@ -15,7 +15,7 @@ import { vec3Distance } from "./utils.js";
 
 const NO_GROW_HIVE_RADIUS= 15
 const GARDENS_COUNT = 10
-const ROCK_SET_COUNT = 20
+const ROCK_SET_COUNT = 40
 
 /**
  * MyScene
