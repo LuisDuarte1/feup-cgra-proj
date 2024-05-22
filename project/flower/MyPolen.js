@@ -5,7 +5,7 @@ export class MyPolen extends CGFobject {
     static polenAppearance = null;
     constructor(scene) {
         super(scene);
-        this.sphere = new MySphere(scene, 20, 20);
+        this.sphere = new MySphere(scene, 10, 10);
         this.initMaterials();
     }
 

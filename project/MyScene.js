@@ -14,7 +14,7 @@ import { MyHive } from "./MyHive.js";
 import { vec3Distance } from "./utils.js";
 
 const NO_GROW_HIVE_RADIUS= 15
-const GARDENS_COUNT = 5
+const GARDENS_COUNT = 10
 
 /**
  * MyScene

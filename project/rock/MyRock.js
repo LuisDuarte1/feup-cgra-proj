@@ -39,7 +39,7 @@ export class MyRock extends CGFobject{
 
         const vertical = Math.random() >= 0.5
         
-        this.initialSphere = new MySphere(scene, 15, 15, false, 
+        this.initialSphere = new MySphere(scene, 10, 10, false, 
             ratio, vertical ? 0.8 : 0.5)
         
         this.verticalRadius = ratio
