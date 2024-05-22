@@ -99,9 +99,11 @@ export class MyAnimatedBee extends MyAnimatedObject{
             const directionVector = [-Math.cos(this.direction), -Math.sin(this.direction)]
             
             const toDirectionVector = [
-                this.position[0] - this.stateTargetPos[0], 
+                this.position[0] - this.stateTargetPos[0],
                 this.position[2] - this.stateTargetPos[2]
             ]
+
+            const sameSign = -Math.sin(this.savedDirection) * toDirectionVector[1] > 0
 
             const finalDirection = Math.acos(
                 (directionVector[0]*toDirectionVector[0] + directionVector[1]*toDirectionVector[1])
@@ -117,11 +119,12 @@ export class MyAnimatedBee extends MyAnimatedObject{
                 this.stateAuto = "moveToPolen"
                 return
             }
+            console.log(finalDirection)
             
-            if(Math.abs(finalDirection) >= 0.00001){
+            if(Math.abs(finalDirection) >= 0.0001){
 
                 this.direction += 
-                    Math.abs(finalDirection) >= AUTO_ROTATION_STEP*deltaTime ? AUTO_ROTATION_STEP*deltaTime : finalDirection
+                    Math.abs(finalDirection) >= AUTO_ROTATION_STEP*deltaTime ? (sameSign ? -1 : 1)*AUTO_ROTATION_STEP*deltaTime : (sameSign ? -1 : 1) * finalDirection
             } else {
                 this.stateAuto = "moveToPolen"
             }
@@ -155,6 +158,7 @@ export class MyAnimatedBee extends MyAnimatedObject{
         else if(this.stateAuto == "restoreHeight"){
             const heightDiff = this.savedHeight - this.position[1];
             if(heightDiff == 0){
+                this.beforeDirection = this.direction;
                 this.stateAuto = "restoreDirection"
                 return
             }
@@ -171,6 +175,9 @@ export class MyAnimatedBee extends MyAnimatedObject{
             const toDirectionVector = [
                 -Math.cos(this.savedDirection), -Math.sin(this.savedDirection)
             ]
+
+            const sameSign = -Math.sin(this.beforeDirection) * toDirectionVector[1] > 0
+
 
             const finalDirection = Math.acos(
                 (directionVector[0]*toDirectionVector[0] + directionVector[1]*toDirectionVector[1])
@@ -196,7 +203,8 @@ export class MyAnimatedBee extends MyAnimatedObject{
             if(Math.abs(finalDirection) >= 0.00001){
 
                 this.direction += 
-                    Math.abs(finalDirection) >= AUTO_ROTATION_STEP*deltaTime ? AUTO_ROTATION_STEP*deltaTime : finalDirection
+                    Math.abs(finalDirection) >= AUTO_ROTATION_STEP*deltaTime ? (sameSign ? -1 : 1)*AUTO_ROTATION_STEP*deltaTime : (sameSign ? -1 : 1) * finalDirection
+
             } else {
                 this.velocityXZ = this.savedVelocityXZ; 
                 this.stateAuto = ""
