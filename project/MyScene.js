@@ -10,6 +10,7 @@ import { MyAnimatedBee } from "./animation/MyAnimatedBee.js";
 import { MyBigGrass } from "./MyBigGrass.js";
 import { MyGarden } from "./flower/MyGarden.js";
 import { MyPolen } from "./flower/MyPolen.js";
+import { MyHive } from "./MyHive.js";
 /**
  * MyScene
  * @constructor
@@ -56,6 +57,8 @@ export class MyScene extends CGFscene {
     this.rockSet = new MyRockSet(this, 10, 10)
     this.bee = new MyBee(this)
     this.beeVisibility = false
+
+    this.hive = new MyHive(this)
 
     this.rockVisibility = false
     this.rockPyramidVisibility = false
@@ -271,6 +274,7 @@ export class MyScene extends CGFscene {
     if (this.beeVisibility) this.bee.display()
     if (this.beeThoraxVisibility) this.beeThorax.display()
     
+    this.hive.display()
     
     this.pushMatrix();
     this.translate(-50, 0, -50)
