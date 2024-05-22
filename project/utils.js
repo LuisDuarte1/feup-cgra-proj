@@ -51,3 +51,4 @@ export function vec3Distance(a,b){
         Math.pow(a[2]-b[2], 2)
     )
 }
+

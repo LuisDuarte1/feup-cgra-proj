@@ -12,6 +12,7 @@ const GRAVITY = 2;
 const MAX_Y_VELOCITY = 2;
 const Y_ACCELERATION = 0.5;
 const TARGET_POS_NORMAL_MULTIPLIER = 1;
+const AUTO_ROTATION_STEP = Math.PI/2;
 
 export class MyAnimatedBee extends MyAnimatedObject{
 
@@ -38,6 +39,7 @@ export class MyAnimatedBee extends MyAnimatedObject{
         this.auto = false;
         this.stateAuto = "";
         this.stateTargetPos = [0,0,0];
+        this.targetFlower = null;
     }
     /**
      * 
@@ -94,6 +96,42 @@ export class MyAnimatedBee extends MyAnimatedObject{
         return nearestFlowers[0];
     }
 
+    autoMove(deltaTime){
+        if(this.stateAuto == "rotateToPolen"){
+            const directionVector = [-Math.cos(this.direction), -Math.sin(this.direction)]
+            
+            const toDirectionVector = [
+                this.position[0] - this.stateTargetPos[0], 
+                this.position[2] - this.stateTargetPos[2]
+            ]
+
+            const finalDirection = Math.acos(
+                (directionVector[0]*toDirectionVector[0] + directionVector[1]*toDirectionVector[1])
+                /
+                (
+                    Math.sqrt(directionVector[0]*directionVector[0] + directionVector[1]*directionVector[1])
+                    *
+                    Math.sqrt(toDirectionVector[0]*toDirectionVector[0] + toDirectionVector[1]*toDirectionVector[1])
+                )
+            )
+
+            if(isNaN(finalDirection)){
+                this.stateAuto = "moveToPolen"
+                return
+            }
+
+            console.log("Prazer: " + finalDirection + " " + this.direction)
+            
+            if(Math.abs(finalDirection) >= 0.00001){
+
+                this.direction += 
+                    Math.abs(finalDirection) >= AUTO_ROTATION_STEP*deltaTime ? AUTO_ROTATION_STEP*deltaTime : finalDirection
+            } else {
+                this.stateAuto = "moveToPolen"
+            }
+        }
+    }
+
 
     checkKeys(timeSinceAppStart){
         const deltaTime = timeSinceAppStart - this.lastFrame;
@@ -134,17 +172,18 @@ export class MyAnimatedBee extends MyAnimatedObject{
 
         if(this.scene.myInterface.isKeyPressed("KeyF") && !this.auto){
             const flower = this.findNearestFlower()
-            if(flower != null){
-                const polenPos = flower.getPolenWorldPosition();
-                this.stateTargetPos = [
-                    polenPos.pos[0] + TARGET_POS_NORMAL_MULTIPLIER*polenPos.normal[0],
-                    polenPos.pos[1] + TARGET_POS_NORMAL_MULTIPLIER*polenPos.normal[1],
-                    polenPos.pos[2] + TARGET_POS_NORMAL_MULTIPLIER*polenPos.normal[2],
-                ]
-                this.auto = true;
-                this.stateAuto = "brake"
-                this.velocityY = 0;
-            }
+            if(flower == null) return
+            this.targetFlower = flower
+            const polenPos = flower.getPolenWorldPosition();
+            this.stateTargetPos = [
+                polenPos.pos[0] + TARGET_POS_NORMAL_MULTIPLIER*polenPos.normal[0],
+                polenPos.pos[1] + TARGET_POS_NORMAL_MULTIPLIER*polenPos.normal[1],
+                polenPos.pos[2] + TARGET_POS_NORMAL_MULTIPLIER*polenPos.normal[2],
+            ]
+            this.auto = true;
+            this.velocityY = 0;
+            this.velocityXZ = 0;
+            this.stateAuto = "rotateToPolen"
         }
 
         
@@ -153,6 +192,7 @@ export class MyAnimatedBee extends MyAnimatedObject{
             //if on auto, do not apply gravity, or drag calculations
             velocityChange = true;
             verticalVelocityChange = true;
+            this.autoMove(deltaTime)
         }
 
         if(!velocityChange){
