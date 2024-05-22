@@ -111,19 +111,8 @@ export class MyScene extends CGFscene {
       let rockSet = new MyRockSet(this, 10, 10)
       this.rockSets.push({obj: rockSet, pos: initalPos})
     }
-
-
     this.animatedBee = new MyAnimatedBee(this, [0, 3, 0])
 
-   var beeAudio = new Audio('sounds/bee.mp3');
-    beeAudio.loop = true;
-    beeAudio.volume = 0.07;
-    beeAudio.play();
-
-    var ambientAudio = new Audio('sounds/background.mp3');
-    ambientAudio.loop = true;
-    ambientAudio.volume = 0.25;
-    ambientAudio.play();
 
     this.updatePeriod = 30;
     this.setUpdatePeriod(this.updatePeriod);
