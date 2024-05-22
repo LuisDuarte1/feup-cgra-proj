@@ -61,7 +61,7 @@ export class MyScene extends CGFscene {
     this.hive = new MyHive(this)
 
     this.rockVisibility = false
-    this.rockPyramidVisibility = false
+    this.rockPyramidVisibility = true
     this.rockSetVisibility = false
     
     // this.flower = new MyFlower(this, 5, 3, 0.06, this.darkStemAppearance, this.darkLeafAppearance, 1.5, 8, Math.PI/4, Math.PI/4, 0, this.blueInnerPetalAppearance, this.blueOuterPetalAppearance, 0.5, this.yellowReceptacleAppearance)
@@ -268,13 +268,22 @@ export class MyScene extends CGFscene {
     // ---- BEGIN Primitive drawing section
     if(this.rockVisibility) this.rock.display()
     if(this.rockSetVisibility) this.rockSet.display()
-    if(this.rockPyramidVisibility) this.rockPyramid.display()
+    if(this.rockPyramidVisibility) {
+      this.pushMatrix()
+      this.scale(4,3,4)
+      this.rockPyramid.display()
+      this.popMatrix()
+
+      this.pushMatrix()
+      this.translate(0, (this.rockPyramid.maxHeight-0.5)*3 , 0)
+      this.hive.display()
+      this.popMatrix()
+    }
     // if(this.flowerVisibility) this.flower.display();
     if(this.gardenVisibility) this.garden.display()
     if (this.beeVisibility) this.bee.display()
     if (this.beeThoraxVisibility) this.beeThorax.display()
     
-    this.hive.display()
     
     this.pushMatrix();
     this.translate(-50, 0, -50)
