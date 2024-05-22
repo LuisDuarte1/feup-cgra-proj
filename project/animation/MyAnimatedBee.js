@@ -259,7 +259,7 @@ export class MyAnimatedBee extends MyAnimatedObject{
         if(this.scene.myInterface.isKeyPressed("KeyF") && !this.auto && !this.object.polen){
             const flower = this.findNearestFlower()
             if(flower == null) return
-            this.savedVelocityXZ = this.velocityXZ;
+            this.savedVelocityXZ = Math.max(this.velocityXZ, 1);
             this.savedHeight = this.position[1];
             this.targetFlower = flower
             this.savedDirection = this.direction;
