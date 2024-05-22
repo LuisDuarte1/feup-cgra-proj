@@ -11,6 +11,11 @@ import { MyBigGrass } from "./MyBigGrass.js";
 import { MyGarden } from "./flower/MyGarden.js";
 import { MyPolen } from "./flower/MyPolen.js";
 import { MyHive } from "./MyHive.js";
+import { vec3Distance } from "./utils.js";
+
+const NO_GROW_HIVE_RADIUS= 15
+const GARDENS_COUNT = 5
+
 /**
  * MyScene
  * @constructor
@@ -60,7 +65,7 @@ export class MyScene extends CGFscene {
     this.rockPyramid = new MyRockPyramid(this)
     this.hive = new MyHive(this)
     this.hive.basePosition = [this.hivePosition[0], (this.rockPyramid.maxHeight-0.5)*3, this.hivePosition[2]]
-    
+    const noGrowHiveRadius = 15
     // this.flower = new MyFlower(this, 5, 3, 0.06, this.darkStemAppearance, this.darkLeafAppearance, 1.5, 8, Math.PI/4, Math.PI/4, 0, this.blueInnerPetalAppearance, this.blueOuterPetalAppearance, 0.5, this.yellowReceptacleAppearance)
     // this.flowerVisibility = false;
 
@@ -69,8 +74,29 @@ export class MyScene extends CGFscene {
     let leafAppearances = [this.leafAppearance, this.darkLeafAppearance]
     let stemAppearances = [this.stemAppearance, this.darkStemAppearance]
 
-    this.garden = new MyGarden(this, 5, 5, flowerAppearances, stemAppearances, leafAppearances, receptacleAppearances)
-    this.gardenVisibility = true
+    this.gardens = []
+    for(let i = 0; i < GARDENS_COUNT; i++){
+      let initalPos = [Math.random() * 200 - 100, 0, Math.random() * 200 - 100]
+      while(true){
+        if(vec3Distance(this.hivePosition, initalPos) <= noGrowHiveRadius){
+          initalPos = [Math.random() * 200 - 100, 0, Math.random() * 200 - 100]
+          continue
+        }
+        let found = false;
+        for(let garden of this.gardens){
+          if(vec3Distance(initalPos, garden.obj.basePosition) <= 25){
+            found = true
+            break
+          }
+        }
+
+        if(!found) break
+        initalPos = [Math.random() * 200 - 100, 0, Math.random() * 200 - 100]
+      }
+      let garden = new MyGarden(this, 5, 5, flowerAppearances, stemAppearances, leafAppearances, receptacleAppearances, initalPos)
+      this.gardens.push({obj: garden, pos: initalPos})
+    }
+
 
     this.animatedBee = new MyAnimatedBee(this, [0, 3, 0])
 
@@ -265,6 +291,12 @@ export class MyScene extends CGFscene {
     // ---- BEGIN Primitive drawing section
     if(this.rockVisibility) this.rock.display()
     if(this.rockSetVisibility) this.rockSet.display()
+    for(let garden of this.gardens){
+      this.pushMatrix()
+      this.translate(...garden.pos)
+      garden.obj.display()
+      this.popMatrix()
+    }
     ///bee hive
     this.pushMatrix()
       this.translate(...this.hivePosition)
@@ -280,7 +312,6 @@ export class MyScene extends CGFscene {
       this.popMatrix()
     this.popMatrix()
     // if(this.flowerVisibility) this.flower.display();
-    if(this.gardenVisibility) this.garden.display()
     if (this.beeVisibility) this.bee.display()
     if (this.beeThoraxVisibility) this.beeThorax.display()
     

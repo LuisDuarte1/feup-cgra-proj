@@ -5,6 +5,8 @@ import { applyScalarToPointInDirection, changeVertex, setColorRGB } from "../uti
 
 export class MyRock extends CGFobject{
 
+    static appearance = null;
+
     /**
      * 
      * @param {number} magnitude 
@@ -27,10 +29,11 @@ export class MyRock extends CGFobject{
     
     constructor(scene, randomMagnitude=8){
         super(scene)
-        this.appearance = new CGFappearance(scene)
-        setColorRGB(this.appearance, 190, 190, 190)
-        // this.appearance.setShininess(5)
-        this.appearance.loadTexture("images/rock.jpg")
+        if(MyRock.appearance == null){
+            MyRock.appearance = new CGFappearance(scene)
+            setColorRGB(MyRock.appearance, 190, 190, 190)
+            MyRock.appearance.loadTexture("images/rock.jpg")
+        }
         
         const ratio = Math.random()/2 + 0.5
 
@@ -50,7 +53,7 @@ export class MyRock extends CGFobject{
      */
 
     display(){
-        this.appearance.apply()
+        MyRock.appearance.apply()
         this.initialSphere.display()
     }
 }
