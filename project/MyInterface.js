@@ -31,6 +31,16 @@ export class MyInterface extends CGFinterface {
 
         this.gui.add(this.scene, 'animatedBeeVisibility').name('Animated Bee')
 
+        var beeAudio = new Audio('sounds/bee.mp3');
+        beeAudio.loop = true;
+        beeAudio.volume = 1;
+        beeAudio.play();
+    
+        var ambientAudio = new Audio('sounds/background.mp3');
+        ambientAudio.loop = true;
+        ambientAudio.volume = 1;
+        ambientAudio.play();
+        
         this.initKeys();
         return true;
     }
