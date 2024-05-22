@@ -37,3 +37,17 @@ export function changeVertex(vertexList, vertex, pos){
     vertexList[pos*3 + 1] = vertex[1]
     vertexList[pos*3 + 2] = vertex[2]
 }
+
+/**
+ * 
+ * @param {number[]} a 
+ * @param {number[]} b 
+ * @returns {number}
+ */
+export function vec3Distance(a,b){
+    return Math.sqrt(
+        Math.pow(a[0]-b[0], 2) +
+        Math.pow(a[1]-b[1], 2) +
+        Math.pow(a[2]-b[2], 2)
+    )
+}

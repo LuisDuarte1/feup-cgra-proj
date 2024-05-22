@@ -6,7 +6,6 @@ import { MyRock } from "./rock/MyRock.js";
 import { MyRockSet } from "./rock/MyRockSet.js";
 import { MyRockPyramid } from "./rock/MyRockPyramid.js";
 import { MyBee } from "./bee/MyBee.js";
-import { MyFlower } from "./flower/MyFlower.js";
 import { MyAnimatedBee } from "./animation/MyAnimatedBee.js";
 import { MyBigGrass } from "./MyBigGrass.js";
 import { MyGarden } from "./flower/MyGarden.js";
