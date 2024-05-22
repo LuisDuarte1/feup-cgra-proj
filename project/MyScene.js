@@ -9,6 +9,7 @@ import { MyBee } from "./bee/MyBee.js";
 import { MyAnimatedBee } from "./animation/MyAnimatedBee.js";
 import { MyBigGrass } from "./MyBigGrass.js";
 import { MyGarden } from "./flower/MyGarden.js";
+import { MyPolen } from "./flower/MyPolen.js";
 /**
  * MyScene
  * @constructor
@@ -72,6 +73,16 @@ export class MyScene extends CGFscene {
     this.gardenVisibility = true
 
     this.animatedBee = new MyAnimatedBee(this, [0, 3, 0])
+
+   /*var beeAudio = new Audio('sounds/bee.mp3');
+    beeAudio.loop = true;
+    beeAudio.volume = 0.07;
+    beeAudio.play();
+
+    var ambientAudio = new Audio('sounds/background.mp3');
+    ambientAudio.loop = true;
+    ambientAudio.volume = 0.25;
+    ambientAudio.play();*/
 
     this.updatePeriod = 30;
     this.setUpdatePeriod(this.updatePeriod);
@@ -194,7 +205,7 @@ export class MyScene extends CGFscene {
     this.yellowReceptacleAppearance.setTexture(this.yellowReceptacleTex);
     this.yellowReceptacleAppearance.setTextureWrap('CLAMP_TO_EDGE', 'CLAMP_TO_EDGE');
 
-    this.greenReceptacleTex = new CGFtexture(this, "images/greenReceptacle.jpeg");
+    this.greenReceptacleTex = new CGFtexture(this, "images/greenReceptacle.png");
     this.greenReceptacleAppearance = new CGFappearance(this);
     this.greenReceptacleAppearance.setAmbient(1, 1, 1, 1);
     this.greenReceptacleAppearance.setTexture(this.greenReceptacleTex);

@@ -1,7 +1,7 @@
 import {CGFobject, CGFappearance, CGFtexture} from '../../lib/CGF.js';
 import { MyStem } from './MyStem.js';
 import { MyCorolla } from './MyCorolla.js';
-import { MySphere } from '../primitives/MySphere.js';
+import { MyPolen } from './MyPolen.js';
 
 export class MyFlower extends CGFobject {
     constructor(scene, numCylinders, height, radius, stemAppearance, leafAppearance, corollaRadius, 
@@ -17,8 +17,7 @@ export class MyFlower extends CGFobject {
         this.receptacleRadius = receptacleRadius;
         this.stem = new MyStem(scene, numCylinders, this.height, maxHeight, minHeight, radius, stemAppearance, leafAppearance);
         this.corolla = new MyCorolla(scene, corollaRadius, numPetals, petalAngle, maxAngle, minAngle, innerPetalColor, outerPetalColor, receptacleRadius, receptacleColor);
-        this.polen = new MySphere(scene, 20, 20);
-        this.initMaterials();
+        this.polen = new MyPolen(scene);
     }
 
     /**
@@ -44,8 +43,6 @@ export class MyFlower extends CGFobject {
         return [x,y,z]
     }
 
-    initMaterials() {
-    }
     display() {
         if(this.polen){
             const normal = this.getPolenNormal()
@@ -54,11 +51,11 @@ export class MyFlower extends CGFobject {
             this.scene.rotate(this.YYRotation, 0, 1, 0);
             this.scene.translate(
                 this.stem.finalPosition[0] - (this.receptacleRadius-0.3)*0.6*normal[0], 
-                this.stem.finalPosition[1] - (this.receptacleRadius-0.3)*0.6*normal[1], 
-                this.stem.finalPosition[2] - (this.receptacleRadius-0.3)*0.6*normal[2], 
+                this.stem.finalPosition[1] - (this.receptacleRadius-0.3)*0.6*normal[1] - 0.01, 
+                this.stem.finalPosition[2] - (this.receptacleRadius-0.3)*0.6*normal[2] - 0.01, 
                 )            
-
-            this.scene.scale(0.15, 0.15, 0.15)
+            
+            this.scene.scale(0.06, 0.08, 0.06)
             this.polen.display()
             this.scene.popMatrix()
         }
