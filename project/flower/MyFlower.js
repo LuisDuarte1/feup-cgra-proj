@@ -31,7 +31,7 @@ export class MyFlower extends CGFobject {
                 this.basePosition[1] + this.stem.finalPosition[1] - (this.receptacleRadius-0.3)*0.6*normal[1],
                 this.basePosition[2] + this.stem.finalPosition[2] - (this.receptacleRadius-0.3)*0.6*normal[2]
             ],
-            normal: normal
+            normal: [-normal[0], -normal[1], -normal[2]]
         }
     }
 
@@ -54,7 +54,6 @@ export class MyFlower extends CGFobject {
                 this.stem.finalPosition[1] - (this.receptacleRadius-0.3)*0.6*normal[1] - 0.01, 
                 this.stem.finalPosition[2] - (this.receptacleRadius-0.3)*0.6*normal[2] - 0.01, 
                 )            
-            
             this.scene.scale(0.06, 0.08, 0.06)
             this.polen.display()
             this.scene.popMatrix()

@@ -2,7 +2,7 @@ import { MyAnimatedObject } from "./MyAnimatedObject.js";
 import { MyBee } from "../bee/MyBee.js";
 import { MyScene } from "../MyScene.js";
 import { MyFlower } from "../flower/MyFlower.js";
-import { vec3Distance } from "../utils.js";
+import { vec3Distance, vec3Magnitude } from "../utils.js";
 
 const DIRECTION_CHANGE = Math.PI / 6;
 const XZ_ACCELERATION = 1;
@@ -13,6 +13,7 @@ const MAX_Y_VELOCITY = 2;
 const Y_ACCELERATION = 0.5;
 const TARGET_POS_NORMAL_MULTIPLIER = 1;
 const AUTO_ROTATION_STEP = Math.PI/2;
+const AUTO_VELOCITY = 2;
 
 export class MyAnimatedBee extends MyAnimatedObject{
 
@@ -33,6 +34,9 @@ export class MyAnimatedBee extends MyAnimatedObject{
         this.initialPosition = position;
         this.direction = Math.PI;
         this.velocityXZ = 0;
+        this.savedVelocityXZ = 0;
+        this.savedHeight = 0;
+        this.savedDirection = 0;
         this.velocityY = 0;
         this.speedFactor = 1;
         this.scaleFactor = 1;
@@ -70,12 +74,6 @@ export class MyAnimatedBee extends MyAnimatedObject{
      * @returns {MyFlower}
      */
     findNearestFlower(){
-        if (this.scene.globalFlowerList.length == 0) return null
-        /**
-         * 
-         * @param {MyFlower} a 
-         * @param {MyFlower} b 
-         */
         const sortFunc = (a, b) => {
             return vec3Distance(this.position, a.getPolenWorldPosition().pos) -
                 vec3Distance(this.position, b.getPolenWorldPosition().pos)
@@ -119,8 +117,6 @@ export class MyAnimatedBee extends MyAnimatedObject{
                 this.stateAuto = "moveToPolen"
                 return
             }
-
-            console.log("Prazer: " + finalDirection + " " + this.direction)
             
             if(Math.abs(finalDirection) >= 0.00001){
 
@@ -129,6 +125,88 @@ export class MyAnimatedBee extends MyAnimatedObject{
             } else {
                 this.stateAuto = "moveToPolen"
             }
+        }
+        else if (this.stateAuto == "moveToPolen"){
+            const toDirectionVector = [
+                this.position[0] - this.stateTargetPos[0], 
+                this.position[1] - this.stateTargetPos[1], 
+                this.position[2] - this.stateTargetPos[2]
+            ]
+
+            const toDirectionVectorNormalized = [
+                toDirectionVector[0] / vec3Magnitude(toDirectionVector),
+                toDirectionVector[1] / vec3Magnitude(toDirectionVector),
+                toDirectionVector[2] / vec3Magnitude(toDirectionVector),
+            ]
+
+            const steps = Math.abs(this.position[0]-this.stateTargetPos[0])/toDirectionVectorNormalized[0]
+
+            if(Math.abs(steps) <= 0.5){
+                this.stateAuto = "paused"
+                return
+            }
+
+            this.position = [
+                this.position[0] - toDirectionVectorNormalized[0]*this.savedVelocityXZ*deltaTime, 
+                this.position[1] - toDirectionVectorNormalized[1]*this.savedVelocityXZ*deltaTime,
+                this.position[2] - toDirectionVectorNormalized[2]*this.savedVelocityXZ*deltaTime,
+            ]
+        }
+        else if(this.stateAuto == "restoreHeight"){
+            const heightDiff = this.savedHeight - this.position[1];
+            if(heightDiff == 0){
+                this.stateAuto = "restoreDirection"
+                return
+            }
+            this.position = [
+                this.position[0],
+                this.position[1] + (heightDiff >= AUTO_VELOCITY*deltaTime 
+                    ? AUTO_VELOCITY*deltaTime : heightDiff),
+                this.position[2],
+            ]
+        }
+        else if(this.stateAuto == "restoreDirection"){
+            const directionVector = [-Math.cos(this.direction), -Math.sin(this.direction)]
+            
+            const toDirectionVector = [
+                -Math.cos(this.savedDirection), -Math.sin(this.savedDirection)
+            ]
+
+            const finalDirection = Math.acos(
+                (directionVector[0]*toDirectionVector[0] + directionVector[1]*toDirectionVector[1])
+                /
+                (
+                    Math.sqrt(directionVector[0]*directionVector[0] + directionVector[1]*directionVector[1])
+                    *
+                    Math.sqrt(toDirectionVector[0]*toDirectionVector[0] + toDirectionVector[1]*toDirectionVector[1])
+                )
+            )
+
+            if(isNaN(finalDirection)){
+                this.velocityXZ = this.savedVelocityXZ;
+                this.stateAuto = ""
+                this.stateTargetPos = [0,0,0]
+                this.auto = false
+                this.savedDirection = 0;
+                this.savedHeight = 0;
+                this.savedVelocityXZ = 0;
+                return
+            }
+            
+            if(Math.abs(finalDirection) >= 0.00001){
+
+                this.direction += 
+                    Math.abs(finalDirection) >= AUTO_ROTATION_STEP*deltaTime ? AUTO_ROTATION_STEP*deltaTime : finalDirection
+            } else {
+                this.velocityXZ = this.savedVelocityXZ; 
+                this.stateAuto = ""
+                this.stateTargetPos = [0,0,0]
+                this.auto = false
+                this.savedDirection = 0;
+                this.savedHeight = 0;
+                this.savedVelocityXZ = 0;
+            }
+
         }
     }
 
@@ -170,10 +248,13 @@ export class MyAnimatedBee extends MyAnimatedObject{
             velocityChange = false;
         }
 
-        if(this.scene.myInterface.isKeyPressed("KeyF") && !this.auto){
+        if(this.scene.myInterface.isKeyPressed("KeyF") && !this.auto && !this.object.polen){
             const flower = this.findNearestFlower()
             if(flower == null) return
+            this.savedVelocityXZ = this.velocityXZ;
+            this.savedHeight = this.position[1];
             this.targetFlower = flower
+            this.savedDirection = this.direction;
             const polenPos = flower.getPolenWorldPosition();
             this.stateTargetPos = [
                 polenPos.pos[0] + TARGET_POS_NORMAL_MULTIPLIER*polenPos.normal[0],
@@ -184,6 +265,15 @@ export class MyAnimatedBee extends MyAnimatedObject{
             this.velocityY = 0;
             this.velocityXZ = 0;
             this.stateAuto = "rotateToPolen"
+        }
+
+        if(this.scene.myInterface.isKeyPressed("KeyP") && this.auto 
+            && this.stateAuto=="paused" && !this.object.polen){
+            const polen = this.targetFlower.polen
+            this.targetFlower.polen = null;
+            this.object.polen = polen
+            
+            this.stateAuto = "restoreHeight"
         }
 
         

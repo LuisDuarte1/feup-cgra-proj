@@ -74,7 +74,7 @@ export class MyScene extends CGFscene {
 
     this.animatedBee = new MyAnimatedBee(this, [0, 3, 0])
 
-   /*var beeAudio = new Audio('sounds/bee.mp3');
+   var beeAudio = new Audio('sounds/bee.mp3');
     beeAudio.loop = true;
     beeAudio.volume = 0.07;
     beeAudio.play();
@@ -82,7 +82,7 @@ export class MyScene extends CGFscene {
     var ambientAudio = new Audio('sounds/background.mp3');
     ambientAudio.loop = true;
     ambientAudio.volume = 0.25;
-    ambientAudio.play();*/
+    ambientAudio.play();
 
     this.updatePeriod = 30;
     this.setUpdatePeriod(this.updatePeriod);

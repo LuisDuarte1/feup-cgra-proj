@@ -28,7 +28,7 @@ export class MyBeeThorax extends CGFobject {
         setColorRGB(this.brownAppearance, 8, 7, 7);
     }
 
-    display() {
+    display(hasPolen=false) {
 
         // thorax
         this.scene.pushMatrix();
@@ -42,7 +42,7 @@ export class MyBeeThorax extends CGFobject {
         this.scene.translate(-0.25, 0.1, 0);
         this.scene.rotate(-Math.PI / 6, 1, 0, 0);
         this.scene.scale(0.5, 0.5, 0.55);
-        this.frontLegs.display();
+        this.frontLegs.display(hasPolen);
         this.scene.popMatrix();
         
         this.scene.pushMatrix();
@@ -51,7 +51,7 @@ export class MyBeeThorax extends CGFobject {
         this.scene.rotate(Math.PI, 0, 1, 0);
         this.scene.scale(0.5, 0.5, 0.55);
         this.brownAppearance.apply();
-        this.frontLegs.display();
+        this.frontLegs.display(hasPolen);
         this.scene.popMatrix();
 
 

@@ -52,3 +52,11 @@ export function vec3Distance(a,b){
     )
 }
 
+/**
+ * 
+ * @param {number[]} a 
+ * @returns {number}
+ */
+export function vec3Magnitude(a){
+    return Math.sqrt(a[0]*a[0] + a[1]*a[1] * a[2]*a[2])
+}
