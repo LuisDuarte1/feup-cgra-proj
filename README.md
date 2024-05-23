@@ -1,5 +1,7 @@
 # CG 2023/2024
 
+Project Deployed at [https://cgra.luisduarte.me/](https://cgra.luisduarte.me/), it might struggle a bit on integrated GPUs. 
+
 ## Group T09G03
 | Name             | Number    | E-Mail             |
 | ---------------- | --------- | ------------------ |
